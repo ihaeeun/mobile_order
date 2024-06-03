@@ -1,1 +1,0 @@
-INSERT INTO product (name, description, price, stock) VALUES ('product1', 'product1', 2000, 5), ('product2', 'product2', 20000, 10), ('product3', 'product3', 3000, 155), ('product4', 'product4', 50000, 3), ('product5', 'product5', 10000, 30);

@@ -5,7 +5,7 @@ server:
 
 logging:
   level:
-    root: info
+    root: warn
 
 spring:
   application:
@@ -21,7 +21,7 @@ spring:
       path: /h2-console
 
   datasource:
-    url: jdbc:h2:mem:order;MODE=MySQL
+    url: jdbc:h2:mem:order
     username: sa
     password:
     driver-class-name: org.h2.Driver
@@ -30,12 +30,20 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create-drop
-    open-in-view: true
+      ddl-auto: create
+    defer-datasource-initialization: true
+
+  sql:
+    init:
+      mode: always
+      continue-on-error: true
+      data-locations: classpath:data.sql
+      schema-locations: classpath:schema.sql
 
   jackson:
     serialization:
       write-null-map-values: false
+
 jwt:
   secret: a2FrYW9iYW5rX29yZGVyX3NlY3JldGtleV8yMDI0MDUzMQ==
 
@@ -47,21 +55,15 @@ spring:
       on-profile: dev
   datasource:
     url: jdbc:h2:tcp://localhost/~/order;MODE=MySQL
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
-    hikari:
-      connection-timeout: 10000
 
   jpa:
     properties:
       hibernate:
         format_sql: true
-        dialect: org.hibernate.dialect.H2Dialect
     show-sql: true
     generate-ddl: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
 
 logging:
   level:

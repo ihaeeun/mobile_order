@@ -8,7 +8,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserContext {
-    private String uuid;
-    private String userId;
-    private String reqPath;
+
+	private String uuid;
+
+	private String userId;
+
+	private String reqPath;
+
 }

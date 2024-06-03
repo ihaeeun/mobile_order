@@ -1,29 +1,47 @@
 package com.kakaobank.order.common.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Setter
-@NoArgsConstructor
 @Table(indexes = @Index(name = "idx_orderId", columnList = "order_id"))
 public class Payment {
 
-    @Id
-    @GeneratedValue
-    private long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long id;
 
-    private String orderId;
+	private String orderId;
 
-    private boolean cancellation = false;
+	private boolean cancellation;
 
-    public Payment(String orderId) {
-        this.orderId = orderId;
-    }
+	public Payment() {
+	}
 
-    public long getId() {
-        return id;
-    }
+	public Payment(String orderId) {
+		this.orderId = orderId;
+	}
+
+	public long getId() {
+		return this.id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+
+	public void setCancellation(boolean cancellation) {
+		this.cancellation = cancellation;
+	}
 
 }

@@ -1,6 +1,8 @@
 package com.kakaobank.order.common.util;
 
+import com.kakaobank.order.member.MemberService;
 import com.kakaobank.order.member.MemberService.MemberServiceException;
+
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
@@ -12,30 +14,36 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 public class UserContextResolver implements HandlerMethodArgumentResolver {
 
-    private final JwtProvider jwtProvider;
+	private final JwtProvider jwtProvider;
 
-    public UserContextResolver(JwtProvider jwtProvider) {
-        this.jwtProvider = jwtProvider;
-    }
+	private final MemberService memberService;
 
-    @Override
-    public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterType().equals(UserContext.class);
-    }
+	public UserContextResolver(JwtProvider jwtProvider, MemberService memberService) {
+		this.jwtProvider = jwtProvider;
+		this.memberService = memberService;
+	}
 
-    @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        if (parameter.getParameterType().equals(UserContext.class)) {
-            var header = webRequest.getHeader("Authorization");
+	@Override
+	public boolean supportsParameter(MethodParameter parameter) {
+		return parameter.getParameterType().equals(UserContext.class);
+	}
 
-            if (StringUtils.hasText(header)) {
-                var claims = jwtProvider.parseClaims(header);
-                var uuid = claims.get("uuid").toString();
-                var userId = claims.get("userId").toString();
-                var reqPath = ((ServletWebRequest) webRequest).getRequest().getRequestURI();
-                return new UserContext(uuid, userId, reqPath);
-            }
-        }
-        throw new MemberServiceException(HttpStatus.UNAUTHORIZED, "You need to login first.");
-    }
+	@Override
+	public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
+			NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+		if (parameter.getParameterType().equals(UserContext.class)) {
+			var header = webRequest.getHeader("Authorization");
+
+			if (StringUtils.hasText(header)) {
+				var claims = this.jwtProvider.parseClaims(header);
+				var uuid = claims.get("uuid").toString();
+				var userId = claims.get("userId").toString();
+				memberService.isAvailableCancelWithdrawal(userId);
+				var reqPath = ((ServletWebRequest) webRequest).getRequest().getRequestURI();
+				return new UserContext(uuid, userId, reqPath);
+			}
+		}
+		throw new MemberServiceException(HttpStatus.UNAUTHORIZED, "You need to login first.");
+	}
+
 }

@@ -1,4 +1,6 @@
 package com.kakaobank.order.order.dto;
 
-public record OrderRequest(long productId, int quantity) {
+import java.util.List;
+
+public record OrderRequest(List<Long> cartIds) {
 }

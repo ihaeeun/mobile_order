@@ -1,46 +1,64 @@
 package com.kakaobank.order.common.entity;
 
-import jakarta.persistence.*;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 @Entity
-@Setter
-@NoArgsConstructor
 public class Product {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
 
-    private String name;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long id;
 
-    private String description;
+	private String name;
 
-    private int price;
+	private int price;
 
-    private int stock = 0;
+	private int stock = 0;
 
-    public long getId() {
-        return id;
-    }
+	public Product() {
+	}
 
-    public int getPrice() {
-        return price;
-    }
+	public long getId() {
+		return id;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public void setId(long id) {
+		this.id = id;
+	}
 
-    public int getStock() {
-        return stock;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public boolean isAvailable(int stock) {
-        return this.stock - stock >= 0;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public void updateStock(int stock) {
-        this.stock -= stock;
-    }
+	public int getPrice() {
+		return price;
+	}
+
+	public void setPrice(int price) {
+		this.price = price;
+	}
+
+	public int getStock() {
+		return stock;
+	}
+
+	public void setStock(int stock) {
+		this.stock = stock;
+	}
+
+	public boolean isAvailable(int stock) {
+		return this.stock - stock >= 0;
+	}
+
+	public void updateStock(int stock) {
+		this.stock -= stock;
+	}
+
 }
