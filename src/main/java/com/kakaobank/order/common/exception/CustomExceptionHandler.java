@@ -1,7 +1,5 @@
 package com.kakaobank.order.common.exception;
 
-import java.sql.SQLException;
-
 import com.kakaobank.order.member.MemberService.MemberServiceException;
 
 import org.springframework.http.HttpStatus;

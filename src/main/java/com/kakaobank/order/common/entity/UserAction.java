@@ -36,7 +36,7 @@ public class UserAction {
 	}
 
 	public UserAction(long id, String userId, ActionType actionType, String apiPath, String request, String result,
-	                  ZonedDateTime actionDateTime) {
+			ZonedDateTime actionDateTime) {
 		this.id = id;
 		this.userId = userId;
 		this.actionType = actionType;
@@ -77,6 +77,7 @@ public class UserAction {
 	public static Builder builder() {
 		return new Builder();
 	}
+
 	public static final class Builder {
 		private long id;
 

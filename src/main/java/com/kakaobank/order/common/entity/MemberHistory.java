@@ -60,36 +60,42 @@ public class MemberHistory {
 
 		private ZonedDateTime actionDateTime;
 
-		private Builder(){
+		private Builder() {
 		}
 
 		public Builder id(long id) {
 			this.id = id;
 			return this;
 		}
+
 		public Builder userId(String userId) {
 			this.userId = userId;
 			return this;
 		}
+
 		public Builder actionType(ActionType actionType) {
 			this.actionType = actionType;
 			return this;
 		}
+
 		public Builder request(String request) {
 			this.request = request;
 			return this;
 		}
+
 		public Builder result(String result) {
 			this.result = result;
 			return this;
 		}
+
 		public Builder actionDateTime(ZonedDateTime actionDateTime) {
 			this.actionDateTime = actionDateTime;
 			return this;
 		}
 
 		public MemberHistory build() {
-			return new MemberHistory(this.id, this.userId, this.actionType, this.request, this.result, this.actionDateTime);
+			return new MemberHistory(this.id, this.userId, this.actionType, this.request, this.result,
+					this.actionDateTime);
 		}
 	}
 

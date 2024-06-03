@@ -6,7 +6,7 @@ create table cart_item
     user_id    varchar(255),
     primary key (id)
 );
-create index idx_userId
+create index ix_userId
     on cart_item (user_id);
 create index ix_userId_productId
     on cart_item (user_id, product_id);
@@ -48,7 +48,7 @@ create table order_form
     order_date_time timestamp(6) with time zone,
     primary key (id)
 );
-create index ix_userId
+create index idx_userId
     on order_form (user_id);
 create index ix_id_orderStatus
     on order_form (id, order_status);

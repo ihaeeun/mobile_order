@@ -10,7 +10,6 @@ import com.kakaobank.order.common.entity.CartItem;
 import com.kakaobank.order.common.entity.Order;
 import com.kakaobank.order.common.entity.OrderItem;
 import com.kakaobank.order.common.entity.OrderStatus;
-import com.kakaobank.order.common.entity.Product;
 import com.kakaobank.order.common.util.UserContext;
 import com.kakaobank.order.order.dto.AddCartRequest;
 import com.kakaobank.order.order.dto.CartItemInfo;
@@ -46,7 +45,7 @@ public class OrderService {
 	private final ProductService productService;
 
 	OrderService(OrderRepository orderRepository, OrderItemRepository orderItemRepository,
-	             CartItemRepository cartItemRepository, PaymentService paymentService, ProductService productService) {
+			CartItemRepository cartItemRepository, PaymentService paymentService, ProductService productService) {
 		this.orderRepository = orderRepository;
 		this.orderItemRepository = orderItemRepository;
 		this.cartItemRepository = cartItemRepository;
@@ -65,13 +64,15 @@ public class OrderService {
 			if (ObjectUtils.isEmpty(cartItem)) {
 				var item = new CartItem(context.getUuid(), request.productId(), request.quantity());
 				this.cartItemRepository.save(item);
-			} else {
+			}
+			else {
 				cartItem.setQuantity(cartItem.getQuantity() + request.quantity());
 				this.cartItemRepository.save(cartItem);
 			}
 
 			return getCartList(context.getUuid());
-		} else {
+		}
+		else {
 			throw new OrderServiceException(HttpStatus.INTERNAL_SERVER_ERROR,
 					"Out of stock(Available : " + product.getStock() + ")");
 		}
@@ -113,7 +114,8 @@ public class OrderService {
 				var orderItem = new OrderItem(orderId, itemInfo.getProductId(), itemInfo.getQuantity(), itemInfo.getPrice());
 				orderItems.add(orderItem);
 				this.productService.updateStock(itemInfo.getProductId(), itemInfo.getQuantity());
-			} else {
+			}
+			else {
 				var message = new StringBuilder().append(itemInfo.getProductName())
 						.append(" is unavailable. (Available: ")
 						.append(itemInfo.getStock())
@@ -138,7 +140,8 @@ public class OrderService {
 			}
 			throw new OrderServiceException(HttpStatus.INTERNAL_SERVER_ERROR, "Fail payment.");
 
-		} catch (HttpStatusCodeException | InterruptedException ex) {
+		}
+		catch (HttpStatusCodeException | InterruptedException ex) {
 			throw new OrderServiceException(HttpStatus.INTERNAL_SERVER_ERROR, "Fail payment.");
 		}
 	}
@@ -168,7 +171,8 @@ public class OrderService {
 			}
 			throw new OrderServiceException(HttpStatus.INTERNAL_SERVER_ERROR, "Fail cancel payment.");
 
-		} catch (HttpStatusCodeException | InterruptedException ex) {
+		}
+		catch (HttpStatusCodeException | InterruptedException ex) {
 			throw new OrderServiceException(HttpStatus.INTERNAL_SERVER_ERROR, "Fail cancel payment.");
 		}
 	}

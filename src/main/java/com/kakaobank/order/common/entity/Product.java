@@ -22,7 +22,7 @@ public class Product {
 	}
 
 	public long getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(long id) {
@@ -30,7 +30,7 @@ public class Product {
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	public void setName(String name) {
@@ -38,7 +38,7 @@ public class Product {
 	}
 
 	public int getPrice() {
-		return price;
+		return this.price;
 	}
 
 	public void setPrice(int price) {
@@ -46,7 +46,7 @@ public class Product {
 	}
 
 	public int getStock() {
-		return stock;
+		return this.stock;
 	}
 
 	public void setStock(int stock) {

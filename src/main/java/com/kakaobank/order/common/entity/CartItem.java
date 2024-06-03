@@ -8,8 +8,10 @@ import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(indexes = { @Index(name = "ix_userId", columnList = "user_id"),
-		@Index(name = "ix_userId_productId", columnList = "user_id, product_id") })
+@Table(indexes = {
+		@Index(name = "ix_userId", columnList = "user_id"),
+		@Index(name = "ix_userId_productId", columnList = "user_id, product_id")
+})
 public class CartItem {
 
 	@Id
@@ -32,7 +34,7 @@ public class CartItem {
 	}
 
 	public long getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(long id) {
@@ -40,7 +42,7 @@ public class CartItem {
 	}
 
 	public String getUserId() {
-		return userId;
+		return this.userId;
 	}
 
 	public void setUserId(String userId) {
@@ -48,7 +50,7 @@ public class CartItem {
 	}
 
 	public long getProductId() {
-		return productId;
+		return this.productId;
 	}
 
 	public void setProductId(long productId) {
@@ -56,7 +58,7 @@ public class CartItem {
 	}
 
 	public int getQuantity() {
-		return quantity;
+		return this.quantity;
 	}
 
 	public void setQuantity(int quantity) {

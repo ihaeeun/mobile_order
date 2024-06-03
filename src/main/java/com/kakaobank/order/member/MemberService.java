@@ -62,7 +62,8 @@ public class MemberService {
 
 		if (ObjectUtils.isEmpty(user) || !validateUser(request, user)) {
 			throw new MemberServiceException(HttpStatus.FORBIDDEN, "Wrong id or password.");
-		} else if (user.isWithdrawal()) {
+		}
+		else if (user.isWithdrawal()) {
 			throw new MemberServiceException(HttpStatus.FORBIDDEN, "You already withdrew");
 		}
 

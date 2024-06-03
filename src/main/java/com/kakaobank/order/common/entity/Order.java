@@ -3,15 +3,15 @@ package com.kakaobank.order.common.entity;
 import java.time.ZonedDateTime;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "order_form", indexes = { @Index(name = "idx_userId", columnList = "user_id"),
-		@Index(name = "ix_id_orderStatus", columnList = "id, order_status") })
+@Table(name = "order_form", indexes = {
+		@Index(name = "idx_userId", columnList = "user_id"),
+		@Index(name = "ix_id_orderStatus", columnList = "id, order_status")
+})
 public class Order {
 
 	@Id
@@ -43,7 +43,7 @@ public class Order {
 	}
 
 	public String getUserId() {
-		return userId;
+		return this.userId;
 	}
 
 	public void setUserId(String userId) {
@@ -51,7 +51,7 @@ public class Order {
 	}
 
 	public OrderStatus getOrderStatus() {
-		return orderStatus;
+		return this.orderStatus;
 	}
 
 	public void setOrderStatus(OrderStatus orderStatus) {
@@ -59,7 +59,7 @@ public class Order {
 	}
 
 	public long getTotalAmount() {
-		return totalAmount;
+		return this.totalAmount;
 	}
 
 	public void setTotalAmount(long totalAmount) {
@@ -67,7 +67,7 @@ public class Order {
 	}
 
 	public ZonedDateTime getOrderDateTime() {
-		return orderDateTime;
+		return this.orderDateTime;
 	}
 
 	public void setOrderDateTime(ZonedDateTime orderDateTime) {

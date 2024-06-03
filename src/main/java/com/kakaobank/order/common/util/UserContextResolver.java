@@ -1,6 +1,5 @@
 package com.kakaobank.order.common.util;
 
-import com.kakaobank.order.member.MemberService;
 import com.kakaobank.order.member.MemberService.MemberServiceException;
 
 import org.springframework.core.MethodParameter;
@@ -16,11 +15,8 @@ public class UserContextResolver implements HandlerMethodArgumentResolver {
 
 	private final JwtProvider jwtProvider;
 
-	private final MemberService memberService;
-
-	public UserContextResolver(JwtProvider jwtProvider, MemberService memberService) {
+	public UserContextResolver(JwtProvider jwtProvider) {
 		this.jwtProvider = jwtProvider;
-		this.memberService = memberService;
 	}
 
 	@Override
@@ -38,7 +34,6 @@ public class UserContextResolver implements HandlerMethodArgumentResolver {
 				var claims = this.jwtProvider.parseClaims(header);
 				var uuid = claims.get("uuid").toString();
 				var userId = claims.get("userId").toString();
-				memberService.isAvailableCancelWithdrawal(userId);
 				var reqPath = ((ServletWebRequest) webRequest).getRequest().getRequestURI();
 				return new UserContext(uuid, userId, reqPath);
 			}

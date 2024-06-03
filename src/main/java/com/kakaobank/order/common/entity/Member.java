@@ -64,7 +64,7 @@ public class Member {
 	}
 
 	public String getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(String id) {
@@ -72,7 +72,7 @@ public class Member {
 	}
 
 	public String getUserId() {
-		return userId;
+		return this.userId;
 	}
 
 	public void setUserId(String userId) {
@@ -80,7 +80,7 @@ public class Member {
 	}
 
 	public String getPassword() {
-		return password;
+		return this.password;
 	}
 
 	public void setPassword(String password) {
@@ -88,7 +88,7 @@ public class Member {
 	}
 
 	public String getUserName() {
-		return userName;
+		return this.userName;
 	}
 
 	public void setUserName(String userName) {
@@ -96,7 +96,7 @@ public class Member {
 	}
 
 	public String getPhone() {
-		return phone;
+		return this.phone;
 	}
 
 	public void setPhone(String phone) {
@@ -112,7 +112,7 @@ public class Member {
 	}
 
 	public boolean isWithdrawal() {
-		return withdrawal;
+		return this.withdrawal;
 	}
 
 	public void setWithdrawal(boolean withdrawal) {
@@ -124,7 +124,7 @@ public class Member {
 	}
 
 	public ZonedDateTime getWithdrawalDateTime() {
-		return withdrawalDateTime;
+		return this.withdrawalDateTime;
 	}
 
 	public void setWithdrawalDateTime(ZonedDateTime withdrawalDateTime) {
@@ -134,17 +134,13 @@ public class Member {
 	public static Member of(SignupRequest request, PasswordEncoder passwordEncoder) {
 		var user = new Member(request.userId(), request.password(), request.name(), request.phone(), request.birth(),
 				request.gender())
-			.hashPassword(passwordEncoder);
+				.hashPassword(passwordEncoder);
 		return user.hashPassword(passwordEncoder);
 	}
 
 	private Member hashPassword(PasswordEncoder passwordEncoder) {
 		this.password = passwordEncoder.encode(this.password);
 		return this;
-	}
-
-	public boolean checkPassword(String plain, PasswordEncoder passwordEncoder) {
-		return passwordEncoder.matches(plain, this.password);
 	}
 
 	public Member withdraw() {

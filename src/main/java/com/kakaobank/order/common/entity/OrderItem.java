@@ -34,7 +34,7 @@ public class OrderItem {
 	}
 
 	public long getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(long id) {
@@ -42,7 +42,7 @@ public class OrderItem {
 	}
 
 	public String getOrderId() {
-		return orderId;
+		return this.orderId;
 	}
 
 	public void setOrderId(String orderId) {
@@ -50,7 +50,7 @@ public class OrderItem {
 	}
 
 	public long getProductId() {
-		return productId;
+		return this.productId;
 	}
 
 	public void setProductId(long productId) {
@@ -58,7 +58,7 @@ public class OrderItem {
 	}
 
 	public int getQuantity() {
-		return quantity;
+		return this.quantity;
 	}
 
 	public void setQuantity(int quantity) {
@@ -66,7 +66,7 @@ public class OrderItem {
 	}
 
 	public int getPrice() {
-		return price;
+		return this.price;
 	}
 
 	public void setPrice(int price) {

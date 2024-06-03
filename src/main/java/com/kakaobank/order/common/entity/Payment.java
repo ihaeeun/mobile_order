@@ -6,8 +6,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Table(indexes = @Index(name = "idx_orderId", columnList = "order_id"))
