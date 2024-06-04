@@ -5,7 +5,10 @@ import com.kakaobank.order.common.entity.ActionType;
 import com.kakaobank.order.common.entity.Member;
 import com.kakaobank.order.common.util.JwtProvider;
 import com.kakaobank.order.member.dto.SigninRequest;
+import com.kakaobank.order.member.dto.SigninResponse;
 import com.kakaobank.order.member.dto.SignupRequest;
+import com.kakaobank.order.member.dto.SignupResponse;
+import com.kakaobank.order.member.dto.WithdrawalResponse;
 import com.kakaobank.order.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 
@@ -33,7 +36,7 @@ public class MemberService {
 
 	@Transactional
 	@MemberHistory(actionType = ActionType.SIGN_UP)
-	public boolean signUp(SignupRequest request) {
+	public SignupResponse signUp(SignupRequest request) {
 		// 가입 여부 확인
 		if (isJoinedUser(request)) {
 			throw new MemberServiceException(HttpStatus.BAD_REQUEST, "You are already joined.");
@@ -43,7 +46,8 @@ public class MemberService {
 			throw new MemberServiceException(HttpStatus.BAD_REQUEST, "Already used id");
 		}
 
-		return this.memberRepository.save(Member.of(request, this.passwordEncoder)) != null;
+		var member = this.memberRepository.save(Member.of(request, this.passwordEncoder));
+		return new SignupResponse(member.getUserId(), member.getUserName());
 	}
 
 	private boolean isJoinedUser(SignupRequest request) {
@@ -57,38 +61,39 @@ public class MemberService {
 
 	@Transactional
 	@MemberHistory(actionType = ActionType.SIGN_IN)
-	public String signIn(SigninRequest request) {
+	public SigninResponse signIn(SigninRequest request) {
 		var user = this.memberRepository.findByUserId(request.userId());
 
-		if (ObjectUtils.isEmpty(user) || !validateUser(request, user)) {
+		if (ObjectUtils.isEmpty(user) || isInvalidatedUser(request, user)) {
 			throw new MemberServiceException(HttpStatus.FORBIDDEN, "Wrong id or password.");
 		}
 		else if (user.isWithdrawal()) {
 			throw new MemberServiceException(HttpStatus.FORBIDDEN, "You already withdrew");
 		}
 
-		return this.jwtProvider.generateToken(user.getId(), user.getUserId());
+		var token = this.jwtProvider.generateToken(user.getId(), user.getUserId());
+		return new SigninResponse(token);
 	}
 
-	private boolean validateUser(SigninRequest request, Member user) {
-		return this.passwordEncoder.matches(request.password(), user.getPassword());
+	private boolean isInvalidatedUser(SigninRequest request, Member user) {
+		return !this.passwordEncoder.matches(request.password(), user.getPassword());
 	}
 
 	@Transactional
 	@MemberHistory(actionType = ActionType.WITHDRAW)
-	public Member withdraw(String uuid) {
+	public WithdrawalResponse withdraw(String uuid) {
 		var user = this.memberRepository.findById(uuid)
 				.orElseThrow(() -> new MemberServiceException(HttpStatus.FORBIDDEN, "Wrong user."));
 		user.withdraw();
-		return this.memberRepository.save(user);
+		return new WithdrawalResponse(user.getUserId(), user.getUserName(), user.isWithdrawal());
 	}
 
 	@Transactional
 	@MemberHistory(actionType = ActionType.CANCEL_WITHDRAW)
-	public Member cancelWithdraw(SigninRequest request) {
+	public WithdrawalResponse cancelWithdraw(SigninRequest request) {
 		var user = this.memberRepository.findByUserId(request.userId());
 
-		if (ObjectUtils.isEmpty(user) || !validateUser(request, user)) {
+		if (ObjectUtils.isEmpty(user) || isInvalidatedUser(request, user)) {
 			throw new MemberServiceException(HttpStatus.FORBIDDEN, "Wrong id or password.");
 		}
 
@@ -97,16 +102,7 @@ public class MemberService {
 		}
 
 		user.cancelWithdraw();
-		return this.memberRepository.save(user);
-	}
-
-	public boolean isAvailableCancelWithdrawal(String userId) {
-		var user = this.memberRepository.findByUserId(userId);
-		if (ObjectUtils.isEmpty(user)) {
-			throw new MemberServiceException(HttpStatus.FORBIDDEN, "Wrong id or password.");
-
-		}
-		return user.isAbleToCancelWithdrawal();
+		return new WithdrawalResponse(user.getUserId(), user.getUserName(), user.isWithdrawal());
 	}
 
 	public static class MemberServiceException extends ResponseStatusException {

@@ -46,15 +46,15 @@ public class Member {
 	private boolean withdrawal = false;
 
 	@Nonnull
-	private ZonedDateTime signUpDateTime = ZonedDateTime.now();
+	private ZonedDateTime signupDatetime = ZonedDateTime.now();
 
 	@Nullable
-	private ZonedDateTime withdrawalDateTime = null;
+	private ZonedDateTime withdrawalDatetime = null;
 
 	public Member() {
 	}
 
-	public Member(String userId, String password, String userName, String phone, LocalDate birth, Gender gender) {
+	private Member(String userId, String password, String userName, String phone, LocalDate birth, Gender gender) {
 		this.userId = userId;
 		this.password = password;
 		this.userName = userName;
@@ -119,22 +119,21 @@ public class Member {
 		this.withdrawal = withdrawal;
 	}
 
-	public void setSignUpDateTime(ZonedDateTime signUpDateTime) {
-		this.signUpDateTime = signUpDateTime;
+	public void setSignupDatetime(ZonedDateTime signUpDateTime) {
+		this.signupDatetime = signUpDateTime;
 	}
 
-	public ZonedDateTime getWithdrawalDateTime() {
-		return this.withdrawalDateTime;
+	public ZonedDateTime getWithdrawalDatetime() {
+		return this.withdrawalDatetime;
 	}
 
-	public void setWithdrawalDateTime(ZonedDateTime withdrawalDateTime) {
-		this.withdrawalDateTime = withdrawalDateTime;
+	public void setWithdrawalDatetime(ZonedDateTime withdrawalDateTime) {
+		this.withdrawalDatetime = withdrawalDateTime;
 	}
 
 	public static Member of(SignupRequest request, PasswordEncoder passwordEncoder) {
 		var user = new Member(request.userId(), request.password(), request.name(), request.phone(), request.birth(),
-				request.gender())
-				.hashPassword(passwordEncoder);
+				request.gender());
 		return user.hashPassword(passwordEncoder);
 	}
 
@@ -145,24 +144,18 @@ public class Member {
 
 	public Member withdraw() {
 		this.setWithdrawal(true);
-		this.setWithdrawalDateTime(ZonedDateTime.now());
+		this.setWithdrawalDatetime(ZonedDateTime.now());
 		return this;
 	}
 
 	public Member cancelWithdraw() {
 		this.setWithdrawal(false);
-		this.setWithdrawalDateTime(null);
+		this.setWithdrawalDatetime(null);
 		return this;
 	}
 
 	public boolean isAbleToCancelWithdrawal() {
-		return this.withdrawalDateTime != null && this.withdrawalDateTime.isAfter(ZonedDateTime.now().minusDays(30));
-	}
-
-	public enum Gender {
-
-		MALE, FEMALE
-
+		return this.withdrawalDatetime != null && this.withdrawalDatetime.isAfter(ZonedDateTime.now().minusDays(30));
 	}
 
 }

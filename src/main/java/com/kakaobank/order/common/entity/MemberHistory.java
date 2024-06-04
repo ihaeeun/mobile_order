@@ -17,8 +17,6 @@ public class MemberHistory {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
-	private String userId;
-
 	@Enumerated(EnumType.STRING)
 	private ActionType actionType;
 
@@ -28,19 +26,18 @@ public class MemberHistory {
 	@Column(columnDefinition = "TEXT")
 	private String result;
 
-	private ZonedDateTime actionDateTime;
+	private ZonedDateTime actionDatetime = ZonedDateTime.now();
 
 	public MemberHistory() {
 	}
 
-	public MemberHistory(long id, String userId, ActionType actionType, String request, String result,
-			ZonedDateTime actionDateTime) {
+	public MemberHistory(long id, ActionType actionType, String request, String result,
+	                     ZonedDateTime actionDatetime) {
 		this.id = id;
-		this.userId = userId;
 		this.actionType = actionType;
 		this.request = request;
 		this.result = result;
-		this.actionDateTime = actionDateTime;
+		this.actionDatetime = actionDatetime;
 	}
 
 	public static Builder builder() {
@@ -49,8 +46,6 @@ public class MemberHistory {
 
 	public static final class Builder {
 		private long id;
-
-		private String userId;
 
 		private ActionType actionType;
 
@@ -65,11 +60,6 @@ public class MemberHistory {
 
 		public Builder id(long id) {
 			this.id = id;
-			return this;
-		}
-
-		public Builder userId(String userId) {
-			this.userId = userId;
 			return this;
 		}
 
@@ -94,7 +84,7 @@ public class MemberHistory {
 		}
 
 		public MemberHistory build() {
-			return new MemberHistory(this.id, this.userId, this.actionType, this.request, this.result,
+			return new MemberHistory(this.id, this.actionType, this.request, this.result,
 					this.actionDateTime);
 		}
 	}

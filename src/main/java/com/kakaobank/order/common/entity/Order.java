@@ -23,7 +23,7 @@ public class Order {
 
 	private long totalAmount;
 
-	private ZonedDateTime orderDateTime = ZonedDateTime.now();
+	private ZonedDateTime orderDatetime = ZonedDateTime.now();
 
 	public Order() {
 	}
@@ -66,12 +66,12 @@ public class Order {
 		this.totalAmount = totalAmount;
 	}
 
-	public ZonedDateTime getOrderDateTime() {
-		return this.orderDateTime;
+	public ZonedDateTime getOrderDatetime() {
+		return this.orderDatetime;
 	}
 
-	public void setOrderDateTime(ZonedDateTime orderDateTime) {
-		this.orderDateTime = orderDateTime;
+	public void setOrderDatetime(ZonedDateTime orderDateTime) {
+		this.orderDatetime = orderDateTime;
 	}
 
 }

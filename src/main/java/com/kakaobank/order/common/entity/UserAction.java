@@ -30,20 +30,20 @@ public class UserAction {
 	@Column(columnDefinition = "TEXT")
 	private String result;
 
-	private ZonedDateTime actionDateTime;
+	private ZonedDateTime actionDatetime;
 
 	public UserAction() {
 	}
 
 	public UserAction(long id, String userId, ActionType actionType, String apiPath, String request, String result,
-			ZonedDateTime actionDateTime) {
+			ZonedDateTime actionDatetime) {
 		this.id = id;
 		this.userId = userId;
 		this.actionType = actionType;
 		this.apiPath = apiPath;
 		this.request = request;
 		this.result = result;
-		this.actionDateTime = actionDateTime;
+		this.actionDatetime = actionDatetime;
 	}
 
 	public void setId(long id) {
@@ -70,8 +70,8 @@ public class UserAction {
 		this.result = result;
 	}
 
-	public void setActionDateTime(ZonedDateTime actionDateTime) {
-		this.actionDateTime = actionDateTime;
+	public void setActionDatetime(ZonedDateTime actionDateTime) {
+		this.actionDatetime = actionDateTime;
 	}
 
 	public static Builder builder() {
