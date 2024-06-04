@@ -1,0 +1,90 @@
+participant Member
+participant Client
+participant Order
+participant Product
+participant Payment
+
+==SIGN UP / SIGN IN==
+
+Client->Member: POST /signin
+
+alt Signed Person
+  Member-->Client: JWT
+else Not Signed Person
+  Member--xClient: Exception
+  Client->Member: POST /signup
+end
+
+note over Client: Request with the token in Header
+note over Order: Verify the token for every request
+
+
+
+==GET PRODUCTS==
+
+Client->Product: GET /products
+
+Client->Product: GET /products/{id}
+
+
+==USE CART==
+Client->Order: POST /cart
+alt in stock
+  Order-->Client: success
+else out of stock
+  Order--xClient: Exception
+end
+
+
+
+Client->Order: GET /cart
+
+
+Client->Order: DELETE /cart
+
+
+==MAKE ORDER==
+Client->Order: POST /order
+alt product is in cart 
+  alt in stock
+      Order->Payment: POST /payment
+      alt success
+        note right of Payment: insert payment
+        Payment-->Order: success
+        note left of Order: insert order\nupdate product stock\nupdate order status\ndelete cart
+        Order-->Client: success
+      else fail
+        Payment--xOrder: Exception
+      end
+
+  else out of stock
+    Order--xClient: Exception
+
+  end
+else product is not in cart
+  Order--xClient : Exception
+end
+
+==CANCEL ORDER==
+Client->Order: DELETE /order
+alt order is able to cancel
+  Order->Payment: DELETE /payment
+  alt success
+    note right of Payment: delete payment
+    Payment-->Order: success
+    note left of Order: update product stock\nupdate order status
+  else fail
+    Payment-->Order: Exception
+  end
+else order is not albe to cancel
+  Order--xClient: Exception
+end
+
+==WITHDRAW==
+Client->Member: DELETE /withdrawal
+Client->Member: PUT /withdrawal/cancellation
+alt before 30 days
+  Member-->Client: success
+else after 30 days
+  Member-->Client: Exception
+end
