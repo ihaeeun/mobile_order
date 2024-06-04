@@ -1,8 +1,7 @@
 package com.kakaobank.order.product;
 
-import java.util.List;
-
 import com.kakaobank.order.common.entity.Product;
+import com.kakaobank.order.product.dto.ProductEntries;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,8 +19,7 @@ public class ProductController {
 	}
 
 	@GetMapping
-	public List<Product> getProducts() {
-		// todo pagination
+	public ProductEntries getProducts() {
 		return this.productService.getProducts();
 	}
 

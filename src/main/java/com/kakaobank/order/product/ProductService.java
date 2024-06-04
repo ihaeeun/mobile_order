@@ -1,8 +1,7 @@
 package com.kakaobank.order.product;
 
-import java.util.List;
-
 import com.kakaobank.order.common.entity.Product;
+import com.kakaobank.order.product.dto.ProductEntries;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -18,17 +17,14 @@ public class ProductService {
 		this.productRepository = productRepository;
 	}
 
-	public List<Product> getProducts() {
-		return this.productRepository.findAll();
-	}
-
-	public List<Product> getProducts(List<Long> ids) {
-		return this.productRepository.findAllById(ids);
+	public ProductEntries getProducts() {
+		var products = this.productRepository.findAll();
+		return new ProductEntries(products);
 	}
 
 	public Product getProductDetail(long id) {
 		return this.productRepository.findById(id)
-			.orElseThrow(() -> new ProductServiceException(HttpStatus.NOT_FOUND, "Thee is no product"));
+				.orElseThrow(() -> new ProductServiceException(HttpStatus.NOT_FOUND, "Thee is no product"));
 	}
 
 	public void updateStock(long productId, int quantity) {
