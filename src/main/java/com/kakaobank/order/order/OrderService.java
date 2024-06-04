@@ -12,9 +12,11 @@ import com.kakaobank.order.common.entity.OrderItem;
 import com.kakaobank.order.common.entity.OrderStatus;
 import com.kakaobank.order.common.util.UserContext;
 import com.kakaobank.order.order.dto.AddCartRequest;
+import com.kakaobank.order.order.dto.CartEntries;
 import com.kakaobank.order.order.dto.CartItemInfo;
 import com.kakaobank.order.order.dto.CartResponse;
 import com.kakaobank.order.order.dto.DeleteCartItemRequest;
+import com.kakaobank.order.order.dto.OrderEntries;
 import com.kakaobank.order.order.dto.OrderRequest;
 import com.kakaobank.order.order.repository.CartItemRepository;
 import com.kakaobank.order.order.repository.OrderItemRepository;
@@ -55,7 +57,7 @@ public class OrderService {
 
 	@Transactional(isolation = Isolation.READ_COMMITTED)
 	@UserAction(actionType = ActionType.ADD_CART)
-	public List<CartResponse> addCart(UserContext context, AddCartRequest request) {
+	public CartEntries addCart(UserContext context, AddCartRequest request) {
 		var product = this.productService.getProductDetail(request.productId());
 
 		if (product.isAvailable(request.quantity())) {
@@ -78,22 +80,22 @@ public class OrderService {
 		}
 	}
 
-	public List<CartResponse> getCartList(String userId) {
-		var cartItemInfos = this.cartItemRepository.findCartItemInfoByUserId(userId);
-		return cartItemInfos.stream()
+	public CartEntries getCartList(String userId) {
+		var cartItemInfos = this.cartItemRepository.findCartItemInfoByUserId(userId).stream()
 				.map((itemInfo) -> CartResponse.of(itemInfo, itemInfo.getStock() > itemInfo.getQuantity()))
 				.toList();
+		return new CartEntries(cartItemInfos);
 	}
 
 	@Transactional
 	@UserAction(actionType = ActionType.DELETE_CART)
-	public List<CartResponse> deleteCartItems(UserContext context, DeleteCartItemRequest request) {
-		this.cartItemRepository.deleteAllById(request.itemIds());
+	public CartEntries deleteCartItems(UserContext context, DeleteCartItemRequest request) {
+		this.cartItemRepository.deleteAllById(request.cartItemIds());
 		return getCartList(context.getUuid());
 	}
 
-	public List<Order> getOrderHistory(String userId) {
-		return this.orderRepository.findAllByUserId(userId);
+	public OrderEntries getOrderHistory(String userId) {
+		return new OrderEntries(this.orderRepository.findAllByUserId(userId));
 	}
 
 	// 재고가 없는 상품이 포함되어 있으면 전체 주문 불가
@@ -103,7 +105,7 @@ public class OrderService {
 		List<OrderItem> orderItems = new LinkedList<>();
 		var orderId = UUID.randomUUID().toString();
 
-		var cartItemInfos = this.cartItemRepository.findAllCartItemInfoById(requests.cartIds());
+		var cartItemInfos = this.cartItemRepository.findAllCartItemInfoById(requests.cartItemIds());
 		if (cartItemInfos.isEmpty()) {
 			throw new OrderServiceException(HttpStatus.BAD_REQUEST, "Empty cart");
 		}
@@ -134,7 +136,7 @@ public class OrderService {
 
 			if (paymentResponse.result()) {
 				this.orderItemRepository.saveAll(orderItems);
-				deleteCartItems(context, new DeleteCartItemRequest(requests.cartIds()));
+				deleteCartItems(context, new DeleteCartItemRequest(requests.cartItemIds()));
 				order.setOrderStatus(OrderStatus.PAID);
 				return this.orderRepository.save(order);
 			}

@@ -5,8 +5,10 @@ import java.util.List;
 import com.kakaobank.order.common.entity.Order;
 import com.kakaobank.order.common.util.UserContext;
 import com.kakaobank.order.order.dto.AddCartRequest;
+import com.kakaobank.order.order.dto.CartEntries;
 import com.kakaobank.order.order.dto.CartResponse;
 import com.kakaobank.order.order.dto.DeleteCartItemRequest;
+import com.kakaobank.order.order.dto.OrderEntries;
 import com.kakaobank.order.order.dto.OrderRequest;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,18 +28,18 @@ public class OrderController {
 	}
 
 	@PostMapping("/cart")
-	public List<CartResponse> addCart(UserContext context, @RequestBody AddCartRequest request) {
+	public CartEntries addCart(UserContext context, @RequestBody AddCartRequest request) {
 		this.orderService.addCart(context, request);
 		return this.orderService.getCartList(context.getUuid());
 	}
 
 	@GetMapping("/cart")
-	public List<CartResponse> getCart(UserContext context) {
+	public CartEntries getCart(UserContext context) {
 		return this.orderService.getCartList(context.getUuid());
 	}
 
 	@DeleteMapping("/cart")
-	public List<CartResponse> deleteCartItems(UserContext context, @RequestBody DeleteCartItemRequest request) {
+	public CartEntries deleteCartItems(UserContext context, @RequestBody DeleteCartItemRequest request) {
 		return this.orderService.deleteCartItems(context, request);
 	}
 
@@ -47,7 +49,7 @@ public class OrderController {
 	}
 
 	@GetMapping("/order/history")
-	public List<Order> orderHistory(UserContext context) {
+	public OrderEntries orderHistory(UserContext context) {
 		return this.orderService.getOrderHistory(context.getUuid());
 	}
 

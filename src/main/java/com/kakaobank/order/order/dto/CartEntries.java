@@ -2,5 +2,5 @@ package com.kakaobank.order.order.dto;
 
 import java.util.List;
 
-public record OrderRequest(List<Long> cartItemIds) {
+public record CartEntries(List<CartResponse> cartResponses) {
 }

@@ -30,12 +30,12 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     defer-datasource-initialization: true
 
   sql:
     init:
-      mode: always
+      mode: embedded
       continue-on-error: true
       data-locations: classpath:data.sql
       schema-locations: classpath:schema.sql

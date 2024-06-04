@@ -2,6 +2,7 @@ package com.kakaobank.order.common.exception;
 
 import com.kakaobank.order.member.MemberService.MemberServiceException;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.orm.jpa.JpaSystemException;
@@ -22,7 +23,7 @@ public class CustomExceptionHandler {
 	}
 
 	@ExceptionHandler
-	public ProblemDetail handleSqlException(JpaSystemException exception) {
+	public ProblemDetail handleSqlException(DataAccessException exception) {
 		return ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error");
 	}
 
