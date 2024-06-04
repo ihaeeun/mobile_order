@@ -102,6 +102,8 @@ API 명세는 [API.md](https://github.com/ihaeeun/mobile_order/blob/main/doc/API
 
 
 ## 개선 필요 사항
-- 모듈 분리
-- 동시성 관리
-- request validation 추가
+- 재고 업데이트 시 **동시성 관리** 필요
+  - JPA Optimistic Lock 적용
+  - 분산 락 적용
+- Request validation
+
