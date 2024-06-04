@@ -24,7 +24,7 @@ public class ProductService {
 
 	public Product getProductDetail(long id) {
 		return this.productRepository.findById(id)
-				.orElseThrow(() -> new ProductServiceException(HttpStatus.NOT_FOUND, "Thee is no product"));
+				.orElseThrow(() -> new ProductServiceException(HttpStatus.NOT_FOUND, "There is no product"));
 	}
 
 	public void updateStock(long productId, int quantity) {
