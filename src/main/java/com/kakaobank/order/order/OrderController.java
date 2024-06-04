@@ -1,12 +1,9 @@
 package com.kakaobank.order.order;
 
-import java.util.List;
-
 import com.kakaobank.order.common.entity.Order;
 import com.kakaobank.order.common.util.UserContext;
 import com.kakaobank.order.order.dto.AddCartRequest;
 import com.kakaobank.order.order.dto.CartEntries;
-import com.kakaobank.order.order.dto.CartResponse;
 import com.kakaobank.order.order.dto.DeleteCartItemRequest;
 import com.kakaobank.order.order.dto.OrderEntries;
 import com.kakaobank.order.order.dto.OrderRequest;

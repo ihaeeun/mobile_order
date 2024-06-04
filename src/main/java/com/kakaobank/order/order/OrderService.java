@@ -22,6 +22,7 @@ import com.kakaobank.order.order.repository.CartItemRepository;
 import com.kakaobank.order.order.repository.OrderItemRepository;
 import com.kakaobank.order.order.repository.OrderRepository;
 import com.kakaobank.order.payment.PaymentService;
+import com.kakaobank.order.payment.dto.PaymentResponse;
 import com.kakaobank.order.product.ProductService;
 
 import org.springframework.http.HttpStatus;
@@ -63,6 +64,7 @@ public class OrderService {
 		if (product.isAvailable(request.quantity())) {
 			var cartItem = this.cartItemRepository.findByUserIdAndProductId(context.getUuid(), request.productId());
 
+			// 카트에 이미 있는 상품인 경우 수량 추가, 카트에 없는 경우 카트에 상품 추가
 			if (ObjectUtils.isEmpty(cartItem)) {
 				var item = new CartItem(context.getUuid(), request.productId(), request.quantity());
 				this.cartItemRepository.save(item);
@@ -75,8 +77,8 @@ public class OrderService {
 			return getCartList(context.getUuid());
 		}
 		else {
-			throw new OrderServiceException(HttpStatus.INTERNAL_SERVER_ERROR,
-					"Out of stock(Available : " + product.getStock() + ")");
+			var message = buildOutOfStockMessage(product.getName(), product.getStock());
+			throw new OrderServiceException(HttpStatus.INTERNAL_SERVER_ERROR, message);
 		}
 	}
 
@@ -98,31 +100,27 @@ public class OrderService {
 		return new OrderEntries(this.orderRepository.findAllByUserId(userId));
 	}
 
-	// 재고가 없는 상품이 포함되어 있으면 전체 주문 불가
 	@Transactional(isolation = Isolation.READ_COMMITTED)
 	@UserAction(actionType = ActionType.MAKE_ORDER)
 	public Order makeOrder(UserContext context, OrderRequest requests) {
-		List<OrderItem> orderItems = new LinkedList<>();
-		var orderId = UUID.randomUUID().toString();
-
+		// 카트에 담겨 있는 내역만 주문 가능
 		var cartItemInfos = this.cartItemRepository.findAllCartItemInfoById(requests.cartItemIds());
 		if (cartItemInfos.isEmpty()) {
 			throw new OrderServiceException(HttpStatus.BAD_REQUEST, "Empty cart");
 		}
 
+		var orderId = UUID.randomUUID().toString();
+		List<OrderItem> orderItems = new LinkedList<>();
+
 		for (CartItemInfo itemInfo : cartItemInfos) {
-			// 재고 확인
-			if (checkStock(itemInfo)) {
-				var orderItem = new OrderItem(orderId, itemInfo.getProductId(), itemInfo.getQuantity(), itemInfo.getPrice());
+			// 재고가 없는 상품이 포함되어 있으면 전체 주문 불가
+			if (isInStock(itemInfo)) {
+				var orderItem = OrderItem.of(orderId, itemInfo);
 				orderItems.add(orderItem);
 				this.productService.updateStock(itemInfo.getProductId(), itemInfo.getQuantity());
 			}
 			else {
-				var message = new StringBuilder().append(itemInfo.getProductName())
-						.append(" is unavailable. (Available: ")
-						.append(itemInfo.getStock())
-						.append(")")
-						.toString();
+				var message = buildOutOfStockMessage(itemInfo.getProductName(), itemInfo.getStock());
 				throw new OrderServiceException(HttpStatus.INTERNAL_SERVER_ERROR, message);
 			}
 		}
@@ -133,23 +131,30 @@ public class OrderService {
 		try {
 			// payment 호출
 			var paymentResponse = this.paymentService.makePayment(order);
-
-			if (paymentResponse.result()) {
-				this.orderItemRepository.saveAll(orderItems);
-				deleteCartItems(context, new DeleteCartItemRequest(requests.cartItemIds()));
-				order.setOrderStatus(OrderStatus.PAID);
-				return this.orderRepository.save(order);
-			}
-			throw new OrderServiceException(HttpStatus.INTERNAL_SERVER_ERROR, "Fail payment.");
-
+			return processAfterPayment(context, paymentResponse, order, orderItems, requests.cartItemIds());
 		}
 		catch (HttpStatusCodeException | InterruptedException ex) {
 			throw new OrderServiceException(HttpStatus.INTERNAL_SERVER_ERROR, "Fail payment.");
 		}
 	}
 
-	private boolean checkStock(CartItemInfo cartItemInfo) {
+	private boolean isInStock(CartItemInfo cartItemInfo) {
 		return cartItemInfo.getStock() > cartItemInfo.getQuantity();
+	}
+
+	private Order processAfterPayment(UserContext context, PaymentResponse paymentResponse, Order order,
+			List<OrderItem> orderItems, List<Long> cartItemIds) {
+		if (paymentResponse.result()) {
+			this.orderItemRepository.saveAll(orderItems);
+
+			// 결제 완료 후, 구매한 상품은 카트에서 제거
+			deleteCartItems(context, new DeleteCartItemRequest(cartItemIds));
+
+			// 주문 상태 업데이트
+			order.setOrderStatus(OrderStatus.PAID);
+			return this.orderRepository.save(order);
+		}
+		throw new OrderServiceException(HttpStatus.INTERNAL_SERVER_ERROR, "Fail payment.");
 	}
 
 	@Transactional(isolation = Isolation.READ_COMMITTED)
@@ -172,11 +177,18 @@ public class OrderService {
 				return this.orderRepository.save(order);
 			}
 			throw new OrderServiceException(HttpStatus.INTERNAL_SERVER_ERROR, "Fail cancel payment.");
-
 		}
 		catch (HttpStatusCodeException | InterruptedException ex) {
 			throw new OrderServiceException(HttpStatus.INTERNAL_SERVER_ERROR, "Fail cancel payment.");
 		}
+	}
+
+	private String buildOutOfStockMessage(String productName, int stock) {
+		return new StringBuilder().append(productName)
+				.append(" is out of stock. (Available: ")
+				.append(stock)
+				.append(")")
+				.toString();
 	}
 
 	public static class OrderServiceException extends ResponseStatusException {

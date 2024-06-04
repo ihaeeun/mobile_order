@@ -1,5 +1,6 @@
 package com.kakaobank.order.common.entity;
 
+import com.kakaobank.order.order.dto.CartItemInfo;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,7 +27,7 @@ public class OrderItem {
 	public OrderItem() {
 	}
 
-	public OrderItem(String orderId, long productId, int quantity, int price) {
+	private OrderItem(String orderId, long productId, int quantity, int price) {
 		this.orderId = orderId;
 		this.productId = productId;
 		this.quantity = quantity;
@@ -73,4 +74,7 @@ public class OrderItem {
 		this.price = price;
 	}
 
+	public static OrderItem of(String orderId, CartItemInfo itemInfo) {
+		return new OrderItem(orderId, itemInfo.getProductId(), itemInfo.getQuantity(), itemInfo.getPrice());
+	}
 }

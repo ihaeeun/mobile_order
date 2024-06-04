@@ -32,7 +32,7 @@ public class MemberHistory {
 	}
 
 	public MemberHistory(long id, ActionType actionType, String request, String result,
-	                     ZonedDateTime actionDatetime) {
+			ZonedDateTime actionDatetime) {
 		this.id = id;
 		this.actionType = actionType;
 		this.request = request;
