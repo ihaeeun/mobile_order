@@ -1,13 +1,14 @@
 package com.kakaobank.order.product;
 
+import java.util.List;
+
 import com.kakaobank.order.TestUtils;
 import com.kakaobank.order.common.entity.Product;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,23 +22,23 @@ class ProductRepositoryTests {
 
 	@BeforeEach
 	void setUp() {
-		product = TestUtils.buildProduct();
+		this.product = TestUtils.buildProduct();
 	}
 
 	@Test
 	void saveAll() {
 		// when
-		var result = this.productRepository.saveAll(List.of(product));
+		var result = this.productRepository.saveAll(List.of(this.product));
 
 		// then
 		assertThat(result).isNotNull();
-		assertThat(result.get(0).getStock()).isEqualTo(product.getStock());
+		assertThat(result.get(0).getStock()).isEqualTo(this.product.getStock());
 	}
 
 	@Test
 	void findAll() {
 		// given
-		var saved = this.productRepository.save(product);
+		var saved = this.productRepository.save(this.product);
 
 		// when
 		var result = this.productRepository.findAll();
@@ -52,7 +53,7 @@ class ProductRepositoryTests {
 	@Test
 	void findById() {
 		// given
-		var saved = this.productRepository.save(product);
+		var saved = this.productRepository.save(this.product);
 
 		// when
 		var result = this.productRepository.findById(saved.getId());

@@ -4,6 +4,7 @@ import com.kakaobank.order.TestUtils;
 import com.kakaobank.order.common.entity.Order;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
@@ -19,26 +20,26 @@ class OrderRepositoryTests {
 
 	@BeforeEach
 	void setUp() {
-		order = TestUtils.buildOrder();
+		this.order = TestUtils.buildOrder();
 	}
 
 	@Test
 	void save() {
 		// when
-		var result = orderRepository.save(order);
+		var result = this.orderRepository.save(this.order);
 
 		// then
 		assertThat(result).isNotNull();
-		assertThat(result.getUserId()).isEqualTo(order.getUserId());
-		assertThat(result.getOrderStatus()).isEqualTo(order.getOrderStatus());
-		assertThat(result.getTotalAmount()).isEqualTo(order.getTotalAmount());
-		assertThat(result.getOrderDatetime()).isEqualTo(order.getOrderDatetime());
+		assertThat(result.getUserId()).isEqualTo(this.order.getUserId());
+		assertThat(result.getOrderStatus()).isEqualTo(this.order.getOrderStatus());
+		assertThat(result.getTotalAmount()).isEqualTo(this.order.getTotalAmount());
+		assertThat(result.getOrderDatetime()).isEqualTo(this.order.getOrderDatetime());
 	}
 
 	@Test
 	void findAllByUserId() {
 		// given
-		orderRepository.save(order);
+		this.orderRepository.save(this.order);
 		var userId = TestUtils.USER_ID;
 
 		// when
@@ -46,29 +47,29 @@ class OrderRepositoryTests {
 
 		// then
 		assertThat(result).isNotNull().hasSize(1);
-		assertThat(result.get(0).getUserId()).isEqualTo(order.getUserId());
-		assertThat(result.get(0).getOrderStatus()).isEqualTo(order.getOrderStatus());
-		assertThat(result.get(0).getTotalAmount()).isEqualTo(order.getTotalAmount());
-		assertThat(result.get(0).getOrderDatetime()).isEqualTo(order.getOrderDatetime());
+		assertThat(result.get(0).getUserId()).isEqualTo(this.order.getUserId());
+		assertThat(result.get(0).getOrderStatus()).isEqualTo(this.order.getOrderStatus());
+		assertThat(result.get(0).getTotalAmount()).isEqualTo(this.order.getTotalAmount());
+		assertThat(result.get(0).getOrderDatetime()).isEqualTo(this.order.getOrderDatetime());
 
 	}
 
 	@Test
 	void findByIdAndOrderStatus() {
 		// given
-		var id = order.getId();
-		var status = order.getOrderStatus();
-		orderRepository.save(order);
+		var id = this.order.getId();
+		var status = this.order.getOrderStatus();
+		this.orderRepository.save(this.order);
 
 		// when
 		var result = this.orderRepository.findByIdAndOrderStatus(id, status);
 
 		// then
 		assertThat(result).isNotNull();
-		assertThat(result.getUserId()).isEqualTo(order.getUserId());
-		assertThat(result.getOrderStatus()).isEqualTo(order.getOrderStatus());
-		assertThat(result.getTotalAmount()).isEqualTo(order.getTotalAmount());
-		assertThat(result.getOrderDatetime()).isEqualTo(order.getOrderDatetime());
+		assertThat(result.getUserId()).isEqualTo(this.order.getUserId());
+		assertThat(result.getOrderStatus()).isEqualTo(this.order.getOrderStatus());
+		assertThat(result.getTotalAmount()).isEqualTo(this.order.getTotalAmount());
+		assertThat(result.getOrderDatetime()).isEqualTo(this.order.getOrderDatetime());
 
 	}
 

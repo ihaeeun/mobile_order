@@ -1,7 +1,11 @@
 package com.kakaobank.order.order;
 
+import java.time.ZonedDateTime;
+import java.util.Collections;
+import java.util.List;
+
 import com.kakaobank.order.TestUtils;
-import com.kakaobank.order.common.entity.*;
+import com.kakaobank.order.common.entity.OrderStatus;
 import com.kakaobank.order.order.dto.AddCartRequest;
 import com.kakaobank.order.order.dto.DeleteCartItemRequest;
 import com.kakaobank.order.order.dto.OrderRequest;
@@ -16,11 +20,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
 
-import java.time.ZonedDateTime;
-import java.util.Collections;
-import java.util.List;
+import org.springframework.http.HttpStatus;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -62,7 +63,7 @@ class OrderServiceTests {
 
 		var cartItemInfo = TestUtils.buildDefaultCartItemInfo();
 		given(this.cartItemRepository.findCartItemInfoByUserId(any()))
-			.willReturn(List.of(cartItemInfo));
+				.willReturn(List.of(cartItemInfo));
 
 		// when
 		var cartItem = TestUtils.buildCartItem();
@@ -107,7 +108,7 @@ class OrderServiceTests {
 		assertThat(cartResponse).isNotNull();
 		assertThat(cartResponse.productId()).isEqualTo(cartItem.getProductId());
 		assertThat(cartResponse.price()).isEqualTo(product.getPrice());
- 		assertThat(cartResponse.quantity()).isEqualTo(cartItem.getQuantity());
+		assertThat(cartResponse.quantity()).isEqualTo(cartItem.getQuantity());
 	}
 
 	@Test
@@ -123,8 +124,8 @@ class OrderServiceTests {
 
 		// when, then
 		assertThatThrownBy(() -> this.orderService.addCart(context, request))
-			.isInstanceOf(OrderService.OrderServiceException.class)
-			.hasMessageContaining("Out of stock");
+				.isInstanceOf(OrderService.OrderServiceException.class)
+				.hasMessageContaining("out of stock");
 	}
 
 	@Test
@@ -135,7 +136,7 @@ class OrderServiceTests {
 				.willReturn(List.of(cartItemInfo));
 
 		// when
-		var result = this.orderService.getCartList(USER_ID);
+		var result = this.orderService.getCartList(this.USER_ID);
 
 		// then
 		assertThat(result).isNotNull();
@@ -196,6 +197,7 @@ class OrderServiceTests {
 		var context = TestUtils.getTestContext();
 		var request = new OrderRequest(List.of(1L));
 
+		// when, then
 		assertThatThrownBy(() -> this.orderService.makeOrder(context, request))
 				.isInstanceOf(OrderService.OrderServiceException.class)
 				.hasMessageContaining("Empty cart");
@@ -211,8 +213,8 @@ class OrderServiceTests {
 		var context = TestUtils.getTestContext();
 		var request = new OrderRequest(List.of(1L));
 		assertThatThrownBy(() -> this.orderService.makeOrder(context, request))
-			.isInstanceOf(OrderService.OrderServiceException.class)
-			.hasMessageContaining("unavailable");
+				.isInstanceOf(OrderService.OrderServiceException.class)
+				.hasMessageContaining("out of stock");
 	}
 
 	@Test
@@ -247,13 +249,14 @@ class OrderServiceTests {
 		given(this.cartItemRepository.findAllCartItemInfoById(any())).willReturn(cartItemInfos);
 
 		given(this.paymentService.makePayment(any()))
-			.willThrow(new PaymentService.PaymentServiceException(HttpStatus.INTERNAL_SERVER_ERROR, "Fail payment."));
+				.willThrow(new PaymentService.PaymentServiceException(HttpStatus.INTERNAL_SERVER_ERROR, "Fail payment."));
 
+		// when, then
 		var context = TestUtils.getTestContext();
 		var request = new OrderRequest(List.of(1L));
 		assertThatThrownBy(() -> this.orderService.makeOrder(context, request))
-			.isInstanceOf(OrderService.OrderServiceException.class)
-			.hasMessageContaining("Fail payment.");
+				.isInstanceOf(OrderService.OrderServiceException.class)
+				.hasMessageContaining("Fail payment.");
 	}
 
 	@Test
@@ -263,8 +266,8 @@ class OrderServiceTests {
 
 		// when, then
 		assertThatThrownBy(() -> this.orderService.cancelOrder(any(), any()))
-			.isInstanceOf(OrderService.OrderServiceException.class)
-			.hasMessageContaining("not valid order");
+				.isInstanceOf(OrderService.OrderServiceException.class)
+				.hasMessageContaining("not valid order");
 	}
 
 	@Test
@@ -279,7 +282,7 @@ class OrderServiceTests {
 		given(this.paymentService.cancelPayment(any())).willReturn(paymentResponse);
 
 		var orderItem = TestUtils.buildOrderItem(order.getId());
-		given(orderItemRepository.findAllByOrderId(any())).willReturn(List.of(orderItem));
+		given(this.orderItemRepository.findAllByOrderId(any())).willReturn(List.of(orderItem));
 
 		given(this.orderRepository.save(any())).willReturn(order);
 
@@ -307,19 +310,8 @@ class OrderServiceTests {
 
 		// when, then
 		assertThatThrownBy(() -> this.orderService.cancelOrder(any(), any()))
-			.isInstanceOf(OrderService.OrderServiceException.class)
-			.hasMessageContaining("Fail cancel payment.");
+				.isInstanceOf(OrderService.OrderServiceException.class)
+				.hasMessageContaining("Fail cancel payment.");
 
 	}
-
-//	private void verifyCartList(CartEntries result) {
-//		assertThat(result).isNotNull();
-//		assertThat(result.cartResponses()).isNotNull().hasSize(1);
-//		var cartResponse = result.cartResponses().get(0);
-//		assertThat(cartResponse).isNotNull();
-//		assertThat(cartResponse.productId()).isEqualTo(cartItem.getProductId());
-//		assertThat(cartResponse.price()).isEqualTo(product.getPrice());
-//		assertThat(cartResponse.quantity()).isEqualTo(cartItem.getQuantity());
-//
-//	}
 }

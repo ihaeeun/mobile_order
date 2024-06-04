@@ -6,23 +6,23 @@ import java.util.Optional;
 
 import com.kakaobank.order.TestUtils;
 import com.kakaobank.order.common.entity.Gender;
-import com.kakaobank.order.common.entity.Member;
 import com.kakaobank.order.common.util.JwtProvider;
 import com.kakaobank.order.member.dto.SigninRequest;
 import com.kakaobank.order.member.dto.SignupRequest;
 import com.kakaobank.order.member.repository.MemberRepository;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.StringUtils;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
 class MemberServiceTests {
@@ -91,7 +91,7 @@ class MemberServiceTests {
 		// given
 		var user = TestUtils.buildMember();
 		given(this.memberRepository.findByUserId(any())).willReturn(user);
-		given(passwordEncoder.matches(any(), any())).willReturn(true);
+		given(this.passwordEncoder.matches(any(), any())).willReturn(true);
 		given(this.jwtProvider.generateToken(any(), any())).willReturn("eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiJoYWlsZXkiLCJ1dWlkIjoiMDlmYjU5MzktODI1Yy00NWQ0LTg3Y2QtYjhiYWMxMzNmNzZkIn0.fRkx44hXDpX7MRcuBYH05ejkqDBU6GoYOd14d63pJuo");
 		var request = new SigninRequest(TestUtils.USER_ID, "secret");
 
@@ -108,7 +108,7 @@ class MemberServiceTests {
 		// given
 		var user = TestUtils.buildMember();
 		given(this.memberRepository.findByUserId(any())).willReturn(user);
-		given(passwordEncoder.matches(any(), any())).willReturn(false);
+		given(this.passwordEncoder.matches(any(), any())).willReturn(false);
 		var request = new SigninRequest(TestUtils.USER_ID, "secret");
 
 		// when, then
@@ -124,7 +124,7 @@ class MemberServiceTests {
 		user.setWithdrawalDatetime(ZonedDateTime.now());
 		user.setWithdrawal(true);
 		given(this.memberRepository.findByUserId(any())).willReturn(user);
-		given(passwordEncoder.matches(any(), any())).willReturn(true);
+		given(this.passwordEncoder.matches(any(), any())).willReturn(true);
 		var request = new SigninRequest(TestUtils.USER_ID, "secret");
 
 		// when, then
@@ -185,7 +185,7 @@ class MemberServiceTests {
 		user.setWithdrawal(true);
 		user.setWithdrawalDatetime(ZonedDateTime.now().minusDays(40));
 		given(this.memberRepository.findByUserId(any())).willReturn(user);
-		given(passwordEncoder.matches(any(), any())).willReturn(true);
+		given(this.passwordEncoder.matches(any(), any())).willReturn(true);
 		var request = new SigninRequest(user.getUserId(), user.getPassword());
 
 		// when, then

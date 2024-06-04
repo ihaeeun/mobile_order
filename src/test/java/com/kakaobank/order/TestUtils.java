@@ -1,23 +1,32 @@
 package com.kakaobank.order;
 
-import com.kakaobank.order.common.entity.*;
-import com.kakaobank.order.common.util.UserContext;
-import com.kakaobank.order.order.dto.CartItemInfo;
-import static java.util.Map.of;
-
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.Map;
 import java.util.UUID;
 
+import com.kakaobank.order.common.entity.CartItem;
+import com.kakaobank.order.common.entity.Gender;
+import com.kakaobank.order.common.entity.Member;
+import com.kakaobank.order.common.entity.Order;
+import com.kakaobank.order.common.entity.OrderItem;
+import com.kakaobank.order.common.entity.OrderStatus;
+import com.kakaobank.order.common.entity.Payment;
+import com.kakaobank.order.common.entity.Product;
+import com.kakaobank.order.common.util.UserContext;
+import com.kakaobank.order.order.dto.CartItemInfo;
+
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.data.projection.SpelAwareProxyProjectionFactory;
 
-public class TestUtils {
+public final class TestUtils {
 
 	public static final String USER_ID = "testUser";
 
 	public static final int QUANTITY = 10;
+
+	private TestUtils() {
+	}
 
 	public static Order buildOrder() {
 		var order = new Order();
