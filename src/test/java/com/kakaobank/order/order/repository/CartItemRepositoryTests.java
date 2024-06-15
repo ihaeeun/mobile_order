@@ -31,7 +31,7 @@ class CartItemRepositoryTests {
 
 		// then
 		assertThat(result).isNotNull();
-		assertThat(result.getUserId()).isEqualTo(this.cartItem.getUserId());
+		assertThat(result.getMemberId()).isEqualTo(this.cartItem.getMemberId());
 		assertThat(result.getProductId()).isEqualTo(this.cartItem.getProductId());
 		assertThat(result.getQuantity()).isEqualTo(this.cartItem.getQuantity());
 	}
@@ -60,7 +60,7 @@ class CartItemRepositoryTests {
 
 		// then
 		assertThat(result).isNotNull();
-		assertThat(result.getUserId()).isEqualTo(this.cartItem.getUserId());
+		assertThat(result.getMemberId()).isEqualTo(this.cartItem.getMemberId());
 		assertThat(result.getProductId()).isEqualTo(this.cartItem.getProductId());
 		assertThat(result.getQuantity()).isEqualTo(this.cartItem.getQuantity());
 	}

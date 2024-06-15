@@ -9,8 +9,8 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(indexes = {
-		@Index(name = "ix_userId", columnList = "user_id"),
-		@Index(name = "ix_userId_productId", columnList = "user_id, product_id")
+		@Index(name = "ix_memberId", columnList = "member_id"),
+		@Index(name = "ix_memberId_productId", columnList = "member_id, product_id")
 })
 public class CartItem {
 
@@ -18,7 +18,7 @@ public class CartItem {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
-	private String userId;
+	private String memberId;
 
 	private long productId;
 
@@ -27,8 +27,8 @@ public class CartItem {
 	public CartItem() {
 	}
 
-	public CartItem(String userId, long productId, int quantity) {
-		this.userId = userId;
+	public CartItem(String memberId, long productId, int quantity) {
+		this.memberId = memberId;
 		this.productId = productId;
 		this.quantity = quantity;
 	}
@@ -41,12 +41,12 @@ public class CartItem {
 		this.id = id;
 	}
 
-	public String getUserId() {
-		return this.userId;
+	public String getMemberId() {
+		return this.memberId;
 	}
 
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setMemberId(String userId) {
+		this.memberId = userId;
 	}
 
 	public long getProductId() {

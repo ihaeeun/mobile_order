@@ -20,7 +20,6 @@ import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.data.projection.SpelAwareProxyProjectionFactory;
 
 public final class TestUtils {
-
 	public static final String USER_ID = "testUser";
 
 	public static final int QUANTITY = 10;
@@ -51,7 +50,7 @@ public final class TestUtils {
 	public static CartItem buildCartItem() {
 		var cartItem = new CartItem();
 		cartItem.setId(1);
-		cartItem.setUserId(USER_ID);
+		cartItem.setMemberId(UUID.randomUUID().toString());
 		cartItem.setProductId(1);
 		cartItem.setQuantity(QUANTITY);
 		return cartItem;
