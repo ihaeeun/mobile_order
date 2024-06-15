@@ -76,7 +76,7 @@ public final class TestUtils {
 
 	public static Member buildMember() {
 		var member = new Member();
-		member.setId(UUID.randomUUID().toString());
+		member.setUuid(UUID.randomUUID().toString());
 		member.setUserId(USER_ID);
 		member.setPassword("secret");
 		member.setUserName(USER_ID);

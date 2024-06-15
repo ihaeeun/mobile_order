@@ -21,8 +21,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class Member {
 
 	@Id
+	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.UUID)
-	private String id;
+	private String uuid;
 
 	@Column(unique = true)
 	private String userId;
@@ -63,12 +64,12 @@ public class Member {
 		this.gender = gender;
 	}
 
-	public String getId() {
-		return this.id;
+	public String getUuid() {
+		return this.uuid;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
 	}
 
 	public String getUserId() {

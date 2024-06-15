@@ -71,7 +71,7 @@ public class MemberService {
 			throw new MemberServiceException(HttpStatus.FORBIDDEN, "You already withdrew");
 		}
 
-		var token = this.jwtProvider.generateToken(user.getId(), user.getUserId());
+		var token = this.jwtProvider.generateToken(user.getUuid(), user.getUserId());
 		return new SigninResponse(token);
 	}
 

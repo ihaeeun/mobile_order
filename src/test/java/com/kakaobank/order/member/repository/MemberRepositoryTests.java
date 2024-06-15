@@ -29,7 +29,7 @@ class MemberRepositoryTests {
 		var saved = this.memberRepository.save(this.member);
 
 		// when
-		var result = this.memberRepository.findById(saved.getId());
+		var result = this.memberRepository.findById(saved.getUuid());
 
 		// then
 		assertThat(result).isNotNull();

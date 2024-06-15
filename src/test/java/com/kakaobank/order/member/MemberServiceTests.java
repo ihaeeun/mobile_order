@@ -141,7 +141,7 @@ class MemberServiceTests {
 		given(this.memberRepository.findById(any())).willReturn(user);
 
 		// when
-		var result = this.memberService.withdraw(member.getId());
+		var result = this.memberService.withdraw(member.getUuid());
 
 		// then
 		assertThat(result).isNotNull();
