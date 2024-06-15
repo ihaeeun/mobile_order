@@ -6,10 +6,7 @@ import java.util.List;
 
 import com.kakaobank.order.TestUtils;
 import com.kakaobank.order.common.entity.OrderStatus;
-import com.kakaobank.order.order.dto.AddCartRequest;
-import com.kakaobank.order.order.dto.DeleteCartItemRequest;
 import com.kakaobank.order.order.dto.OrderRequest;
-import com.kakaobank.order.order.repository.CartItemRepository;
 import com.kakaobank.order.order.repository.OrderItemRepository;
 import com.kakaobank.order.order.repository.OrderRepository;
 import com.kakaobank.order.payment.PaymentService;
@@ -42,7 +39,7 @@ class OrderServiceTests {
 	OrderItemRepository orderItemRepository;
 
 	@Mock
-	CartItemRepository cartItemRepository;
+	CartService cartService;
 
 	@Mock
 	PaymentService paymentService;
@@ -51,123 +48,6 @@ class OrderServiceTests {
 	ProductService productService;
 
 	private final String USER_ID = "testuser";
-
-	@Test
-	void addCart_emptyCart() {
-		// given
-		var product = TestUtils.buildProduct();
-		given(this.productService.getProductDetail(product.getId())).willReturn(product);
-
-		var context = TestUtils.getTestContext();
-		given(this.cartItemRepository.findByUserIdAndProductId(context.getUuid(), product.getId())).willReturn(null);
-
-		var cartItemInfo = TestUtils.buildDefaultCartItemInfo();
-		given(this.cartItemRepository.findCartItemInfoByUserId(any()))
-				.willReturn(List.of(cartItemInfo));
-
-		// when
-		var cartItem = TestUtils.buildCartItem();
-		var request = new AddCartRequest(cartItem.getProductId(), cartItem.getQuantity());
-		var result = this.orderService.addCart(context, request);
-
-		// then
-		verify(this.cartItemRepository).save(any());
-		assertThat(result).isNotNull();
-		assertThat(result.cartResponses()).isNotNull().hasSize(1);
-		var cartResponse = result.cartResponses().get(0);
-		assertThat(cartResponse).isNotNull();
-		assertThat(cartResponse.productId()).isEqualTo(cartItem.getProductId());
-		assertThat(cartResponse.price()).isEqualTo(product.getPrice());
-		assertThat(cartResponse.quantity()).isEqualTo(cartItem.getQuantity());
-	}
-
-	@Test
-	void addCart_notEmptyCart() {
-		// given
-		var product = TestUtils.buildProduct();
-		given(this.productService.getProductDetail(product.getId())).willReturn(product);
-
-		var context = TestUtils.getTestContext();
-		var cartItem = TestUtils.buildCartItem();
-		given(this.cartItemRepository.findByUserIdAndProductId(context.getUuid(), product.getId())).willReturn(cartItem);
-
-		var quantity = 5;
-		var cartItemInfo = TestUtils.buildCustomCartItemInfo(cartItem.getQuantity() + quantity);
-		given(this.cartItemRepository.findCartItemInfoByUserId(context.getUuid()))
-				.willReturn(List.of(cartItemInfo));
-
-		// when
-		var request = new AddCartRequest(cartItem.getProductId(), 5);
-		var result = this.orderService.addCart(context, request);
-
-		// then
-		verify(this.cartItemRepository).save(any());
-		assertThat(result).isNotNull();
-		assertThat(result.cartResponses()).isNotNull().hasSize(1);
-		var cartResponse = result.cartResponses().get(0);
-		assertThat(cartResponse).isNotNull();
-		assertThat(cartResponse.productId()).isEqualTo(cartItem.getProductId());
-		assertThat(cartResponse.price()).isEqualTo(product.getPrice());
-		assertThat(cartResponse.quantity()).isEqualTo(cartItem.getQuantity());
-	}
-
-	@Test
-	void addCart_unavailableProduct() {
-		// given
-		var product = TestUtils.buildProduct();
-		product.setStock(0);
-		given(this.productService.getProductDetail(product.getId())).willReturn(product);
-
-		var cartItem = TestUtils.buildCartItem();
-		var request = new AddCartRequest(cartItem.getProductId(), cartItem.getQuantity());
-		var context = TestUtils.getTestContext();
-
-		// when, then
-		assertThatThrownBy(() -> this.orderService.addCart(context, request))
-				.isInstanceOf(OrderService.OrderServiceException.class)
-				.hasMessageContaining("out of stock");
-	}
-
-	@Test
-	void getCartList() {
-		// given
-		var cartItemInfo = TestUtils.buildDefaultCartItemInfo();
-		given(this.cartItemRepository.findCartItemInfoByUserId(any()))
-				.willReturn(List.of(cartItemInfo));
-
-		// when
-		var result = this.orderService.getCartList(this.USER_ID);
-
-		// then
-		assertThat(result).isNotNull();
-		assertThat(result.cartResponses()).isNotNull().hasSize(1);
-		var cartResponse = result.cartResponses().get(0);
-		assertThat(cartResponse).isNotNull();
-		assertThat(cartResponse.productId()).isEqualTo(cartItemInfo.getProductId());
-		assertThat(cartResponse.price()).isEqualTo(cartItemInfo.getPrice());
-		assertThat(cartResponse.quantity()).isEqualTo(cartItemInfo.getQuantity());
-	}
-
-	@Test
-	void deleteCartItems() {
-		// given
-		var cartItemInfo = TestUtils.buildDefaultCartItemInfo();
-		given(this.cartItemRepository.findCartItemInfoByUserId(any()))
-				.willReturn(List.of(cartItemInfo));
-
-		// when
-		var context = TestUtils.getTestContext();
-		var request = new DeleteCartItemRequest(List.of(2L));
-		var result = this.orderService.deleteCartItems(context, request);
-
-		// then
-		verify(this.cartItemRepository).deleteAllById(any());
-		assertThat(result).isNotNull();
-		assertThat(result.cartResponses()).isNotNull().hasSize(1);
-		var cartResponse = result.cartResponses().get(0);
-		assertThat(cartResponse).isNotNull();
-
-	}
 
 	@Test
 	void getOrderHistory() {
@@ -193,7 +73,7 @@ class OrderServiceTests {
 	@Test
 	void makeOrder_emptyCart() {
 		// given
-		given(this.cartItemRepository.findAllCartItemInfoById(any())).willReturn(Collections.emptyList());
+		given(this.cartService.getCartItemInfos(any())).willReturn(Collections.emptyList());
 		var context = TestUtils.getTestContext();
 		var request = new OrderRequest(List.of(1L));
 
@@ -207,7 +87,7 @@ class OrderServiceTests {
 	void makeOrder_outOfStock() {
 		// given
 		var cartItemInfos = List.of(TestUtils.buildCustomCartItemInfo(30));
-		given(this.cartItemRepository.findAllCartItemInfoById(any())).willReturn(cartItemInfos);
+		given(this.cartService.getCartItemInfos(any())).willReturn(cartItemInfos);
 
 		// when, then
 		var context = TestUtils.getTestContext();
@@ -221,7 +101,7 @@ class OrderServiceTests {
 	void makeOrder_successPayment() throws InterruptedException {
 		// given
 		var cartItemInfos = List.of(TestUtils.buildDefaultCartItemInfo());
-		given(this.cartItemRepository.findAllCartItemInfoById(any())).willReturn(cartItemInfos);
+		given(this.cartService.getCartItemInfos(any())).willReturn(cartItemInfos);
 
 		var payment = TestUtils.buildPayment();
 		var paymentResponse = new PaymentResponse(true, payment);
@@ -246,7 +126,7 @@ class OrderServiceTests {
 	void makeOrder_failPayment() throws InterruptedException {
 		// given
 		var cartItemInfos = List.of(TestUtils.buildDefaultCartItemInfo());
-		given(this.cartItemRepository.findAllCartItemInfoById(any())).willReturn(cartItemInfos);
+		given(this.cartService.getCartItemInfos(any())).willReturn(cartItemInfos);
 
 		given(this.paymentService.makePayment(any()))
 				.willThrow(new PaymentService.PaymentServiceException(HttpStatus.INTERNAL_SERVER_ERROR, "Fail payment."));
