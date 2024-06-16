@@ -45,8 +45,8 @@ public class CartItem {
 		return this.memberId;
 	}
 
-	public void setMemberId(String userId) {
-		this.memberId = userId;
+	public void setMemberId(String memberId) {
+		this.memberId = memberId;
 	}
 
 	public long getProductId() {

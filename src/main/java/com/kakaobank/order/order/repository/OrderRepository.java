@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, String> {
 
-	List<Order> findAllByUserId(String userId);
+	List<Order> findAllByMemberId(String memberId);
 
 	Order findByIdAndOrderStatus(String id, OrderStatus status);
 

@@ -9,7 +9,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "order_form", indexes = {
-		@Index(name = "idx_userId", columnList = "user_id"),
+		@Index(name = "ix_memberId", columnList = "memberId"),
 		@Index(name = "ix_id_orderStatus", columnList = "id, order_status")
 })
 public class Order {
@@ -17,7 +17,7 @@ public class Order {
 	@Id
 	private String id;
 
-	private String userId;
+	private String memberId;
 
 	private OrderStatus orderStatus = OrderStatus.ORDERED;
 
@@ -28,9 +28,9 @@ public class Order {
 	public Order() {
 	}
 
-	public Order(String id, String userId, int totalAmount) {
+	public Order(String id, String memberId, int totalAmount) {
 		this.id = id;
-		this.userId = userId;
+		this.memberId = memberId;
 		this.totalAmount = totalAmount;
 	}
 
@@ -42,12 +42,12 @@ public class Order {
 		this.id = id;
 	}
 
-	public String getUserId() {
-		return this.userId;
+	public String getMemberId() {
+		return this.memberId;
 	}
 
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setMemberId(String memberId) {
+		this.memberId = memberId;
 	}
 
 	public OrderStatus getOrderStatus() {

@@ -30,7 +30,7 @@ class OrderRepositoryTests {
 
 		// then
 		assertThat(result).isNotNull();
-		assertThat(result.getUserId()).isEqualTo(this.order.getUserId());
+		assertThat(result.getMemberId()).isEqualTo(this.order.getMemberId());
 		assertThat(result.getOrderStatus()).isEqualTo(this.order.getOrderStatus());
 		assertThat(result.getTotalAmount()).isEqualTo(this.order.getTotalAmount());
 		assertThat(result.getOrderDatetime()).isEqualTo(this.order.getOrderDatetime());
@@ -40,14 +40,13 @@ class OrderRepositoryTests {
 	void findAllByUserId() {
 		// given
 		this.orderRepository.save(this.order);
-		var userId = TestUtils.USER_ID;
 
 		// when
-		var result = this.orderRepository.findAllByUserId(userId);
+		var result = this.orderRepository.findAllByMemberId(this.order.getMemberId());
 
 		// then
 		assertThat(result).isNotNull().hasSize(1);
-		assertThat(result.get(0).getUserId()).isEqualTo(this.order.getUserId());
+		assertThat(result.get(0).getMemberId()).isEqualTo(this.order.getMemberId());
 		assertThat(result.get(0).getOrderStatus()).isEqualTo(this.order.getOrderStatus());
 		assertThat(result.get(0).getTotalAmount()).isEqualTo(this.order.getTotalAmount());
 		assertThat(result.get(0).getOrderDatetime()).isEqualTo(this.order.getOrderDatetime());
@@ -66,7 +65,7 @@ class OrderRepositoryTests {
 
 		// then
 		assertThat(result).isNotNull();
-		assertThat(result.getUserId()).isEqualTo(this.order.getUserId());
+		assertThat(result.getMemberId()).isEqualTo(this.order.getMemberId());
 		assertThat(result.getOrderStatus()).isEqualTo(this.order.getOrderStatus());
 		assertThat(result.getTotalAmount()).isEqualTo(this.order.getTotalAmount());
 		assertThat(result.getOrderDatetime()).isEqualTo(this.order.getOrderDatetime());

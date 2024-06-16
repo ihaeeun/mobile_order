@@ -54,7 +54,7 @@ class OrderServiceTests {
 		// given
 		var order = TestUtils.buildOrder();
 		var userId = this.USER_ID;
-		given(this.orderRepository.findAllByUserId(any())).willReturn(List.of(order));
+		given(this.orderRepository.findAllByMemberId(any())).willReturn(List.of(order));
 
 		// when
 		var result = this.orderService.getOrderHistory(userId);
@@ -67,7 +67,7 @@ class OrderServiceTests {
 		assertThat(orderHistory.getOrderStatus()).isEqualTo(OrderStatus.PAID);
 		assertThat(orderHistory.getOrderDatetime()).isBefore(ZonedDateTime.now());
 		assertThat(orderHistory.getTotalAmount()).isEqualTo(order.getTotalAmount());
-		assertThat(orderHistory.getUserId()).isEqualTo(order.getUserId());
+		assertThat(orderHistory.getMemberId()).isEqualTo(order.getMemberId());
 	}
 
 	@Test

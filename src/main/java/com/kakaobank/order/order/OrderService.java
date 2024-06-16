@@ -52,8 +52,8 @@ public class OrderService {
 		this.productService = productService;
 	}
 
-	public OrderEntries getOrderHistory(String userId) {
-		return new OrderEntries(this.orderRepository.findAllByUserId(userId));
+	public OrderEntries getOrderHistory(String memberId) {
+		return new OrderEntries(this.orderRepository.findAllByMemberId(memberId));
 	}
 
 	@Transactional(isolation = Isolation.READ_COMMITTED)

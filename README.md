@@ -89,6 +89,7 @@ API 명세는 [API.md](https://github.com/ihaeeun/mobile_order/blob/main/doc/API
       }
   ]
   ```
+  
 ### Order
 - 주문은 카트에 담긴 항목들에 대해서만 주문이 가능합니다.
 - 주문 목록에 재고가 없는 상품이 포함되어 있으면 주문이 불가능합니다.
@@ -100,6 +101,7 @@ API 명세는 [API.md](https://github.com/ihaeeun/mobile_order/blob/main/doc/API
 ### 기타
 - UserAction과 MemberHistory는 AOP로 구현되어 로깅이 필요한 메소드에는 `@UserAction` 및 `@MemberHistory` 어노테이션을 사용했습니다.
 
+<br>  
 
 ## 개선 필요 사항
 - 재고 업데이트 시 **동시성 관리** 필요

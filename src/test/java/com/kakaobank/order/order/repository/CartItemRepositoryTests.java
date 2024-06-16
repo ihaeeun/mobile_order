@@ -37,12 +37,12 @@ class CartItemRepositoryTests {
 	}
 
 	@Test
-	void findByUserId() {
+	void findByMemberId() {
 		// given
 		this.cartItemRepository.save(this.cartItem);
 
 		// when
-		var result = this.cartItemRepository.findByUserId(TestUtils.USER_ID);
+		var result = this.cartItemRepository.findByMemberId(this.cartItem.getMemberId());
 
 		// then
 		assertThat(result).isNotNull().hasSize(1);
@@ -51,12 +51,12 @@ class CartItemRepositoryTests {
 	}
 
 	@Test
-	void findByUserIdAndProductId() {
+	void findByMemberIdAndProductId() {
 		// given
 		this.cartItemRepository.save(this.cartItem);
 
 		// when
-		var result = this.cartItemRepository.findByUserIdAndProductId(TestUtils.USER_ID, this.cartItem.getProductId());
+		var result = this.cartItemRepository.findByMemberIdAndProductId(this.cartItem.getMemberId(), this.cartItem.getProductId());
 
 		// then
 		assertThat(result).isNotNull();

@@ -17,7 +17,7 @@ public class UserAction {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
-	private String userId;
+	private String memberId;
 
 	@Enumerated(EnumType.STRING)
 	private ActionType actionType;
@@ -35,10 +35,10 @@ public class UserAction {
 	public UserAction() {
 	}
 
-	public UserAction(long id, String userId, ActionType actionType, String apiPath, String request, String result,
-			ZonedDateTime actionDatetime) {
+	public UserAction(long id, String memberId, ActionType actionType, String apiPath, String request, String result,
+	                  ZonedDateTime actionDatetime) {
 		this.id = id;
-		this.userId = userId;
+		this.memberId = memberId;
 		this.actionType = actionType;
 		this.apiPath = apiPath;
 		this.request = request;
@@ -50,8 +50,8 @@ public class UserAction {
 		this.id = id;
 	}
 
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setMemberId(String userId) {
+		this.memberId = userId;
 	}
 
 	public void setActionType(ActionType actionType) {
@@ -81,7 +81,7 @@ public class UserAction {
 	public static final class Builder {
 		private long id;
 
-		private String userId;
+		private String memberId;
 
 		private ActionType actionType;
 
@@ -101,8 +101,8 @@ public class UserAction {
 			return this;
 		}
 
-		public Builder userId(String userId) {
-			this.userId = userId;
+		public Builder memberId(String memberId) {
+			this.memberId = memberId;
 			return this;
 		}
 
@@ -132,7 +132,7 @@ public class UserAction {
 		}
 
 		public UserAction build() {
-			return new UserAction(this.id, this.userId, this.actionType, this.apiPath, this.request, this.result, this.actionDateTime);
+			return new UserAction(this.id, this.memberId, this.actionType, this.apiPath, this.request, this.result, this.actionDateTime);
 		}
 	}
 }

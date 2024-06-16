@@ -2,7 +2,6 @@ package com.kakaobank.order;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.util.Map;
 import java.util.UUID;
 
 import com.kakaobank.order.common.entity.CartItem;
@@ -16,9 +15,6 @@ import com.kakaobank.order.common.entity.Product;
 import com.kakaobank.order.common.util.UserContext;
 import com.kakaobank.order.order.dto.CartItemInfo;
 
-import org.springframework.data.projection.ProjectionFactory;
-import org.springframework.data.projection.SpelAwareProxyProjectionFactory;
-
 public final class TestUtils {
 	public static final String USER_ID = "testUser";
 
@@ -30,7 +26,7 @@ public final class TestUtils {
 	public static Order buildOrder() {
 		var order = new Order();
 		order.setId(UUID.randomUUID().toString());
-		order.setUserId(USER_ID);
+		order.setMemberId(USER_ID);
 		order.setTotalAmount(20000);
 		order.setOrderStatus(OrderStatus.PAID);
 		order.setOrderDatetime(ZonedDateTime.now());
@@ -86,53 +82,11 @@ public final class TestUtils {
 	}
 
 	public static CartItemInfo buildDefaultCartItemInfo() {
-
-		CartItemInfo cartItemInfo = new CartItemInfo() {
-			@Override
-			public long getId() {
-				return 1;
-			}
-
-			@Override
-			public long getProductId() {
-				return 1;
-			}
-
-			@Override
-			public String getProductName() {
-				return "product1";
-			}
-
-			@Override
-			public int getPrice() {
-				return 2000;
-			}
-
-			@Override
-			public int getQuantity() {
-				return QUANTITY;
-			}
-
-			@Override
-			public int getStock() {
-				return 20;
-			}
-		};
-
-		return cartItemInfo;
+		return new CartItemInfo(1, 1, "product1", 2000, QUANTITY, 20);
 	}
 
 	public static CartItemInfo buildCustomCartItemInfo(int quantity) {
-		ProjectionFactory projectionFactory = new SpelAwareProxyProjectionFactory();
-		Map<String, Object> fields = Map.of(
-				"id", 1,
-				"productId", 1,
-				"productName", "product1",
-				"price", 2000,
-				"quantity", quantity,
-				"stock", 20
-		);
-		return projectionFactory.createProjection(CartItemInfo.class, fields);
+		return new CartItemInfo(1, 1, "product1", 2000, quantity, 20);
 	}
 
 	public static UserContext getTestContext() {

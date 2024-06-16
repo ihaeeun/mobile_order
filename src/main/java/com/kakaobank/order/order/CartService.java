@@ -33,8 +33,8 @@ public class CartService {
 	}
 
 
-	public CartEntries getCartList(String userId) {
-		var cartItemInfos = this.cartItemRepository.findCartItemInfoByUserId(userId).stream()
+	public CartEntries getCartList(String memberId) {
+		var cartItemInfos = this.cartItemRepository.findCartItemResponseByMemberId(memberId).stream()
 				.map((itemInfo) -> CartResponse.of(itemInfo, itemInfo.getStock() > itemInfo.getQuantity()))
 				.toList();
 		return new CartEntries(cartItemInfos);
@@ -50,7 +50,7 @@ public class CartService {
 		var product = this.productService.getProductDetail(request.productId());
 
 		if (product.isAvailable(request.quantity())) {
-			var cartItem = this.cartItemRepository.findByUserIdAndProductId(context.getUuid(), request.productId());
+			var cartItem = this.cartItemRepository.findByMemberIdAndProductId(context.getUuid(), request.productId());
 
 			// 카트에 이미 있는 상품인 경우 수량 추가, 카트에 없는 경우 카트에 상품 추가
 			if (ObjectUtils.isEmpty(cartItem)) {

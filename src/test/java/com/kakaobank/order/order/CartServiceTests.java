@@ -40,10 +40,10 @@ class CartServiceTests {
 		given(this.productService.getProductDetail(product.getId())).willReturn(product);
 
 		var context = TestUtils.getTestContext();
-		given(this.cartItemRepository.findByUserIdAndProductId(context.getUuid(), product.getId())).willReturn(null);
+		given(this.cartItemRepository.findByMemberIdAndProductId(context.getUuid(), product.getId())).willReturn(null);
 
 		var cartItemInfo = TestUtils.buildDefaultCartItemInfo();
-		given(this.cartItemRepository.findCartItemInfoByUserId(any()))
+		given(this.cartItemRepository.findCartItemResponseByMemberId(any()))
 				.willReturn(List.of(cartItemInfo));
 
 		// when
@@ -70,11 +70,11 @@ class CartServiceTests {
 
 		var context = TestUtils.getTestContext();
 		var cartItem = TestUtils.buildCartItem();
-		given(this.cartItemRepository.findByUserIdAndProductId(context.getUuid(), product.getId())).willReturn(cartItem);
+		given(this.cartItemRepository.findByMemberIdAndProductId(context.getUuid(), product.getId())).willReturn(cartItem);
 
 		var quantity = 5;
 		var cartItemInfo = TestUtils.buildCustomCartItemInfo(cartItem.getQuantity() + quantity);
-		given(this.cartItemRepository.findCartItemInfoByUserId(context.getUuid()))
+		given(this.cartItemRepository.findCartItemResponseByMemberId(context.getUuid()))
 				.willReturn(List.of(cartItemInfo));
 
 		// when
@@ -113,7 +113,7 @@ class CartServiceTests {
 	void getCartList() {
 		// given
 		var cartItemInfo = TestUtils.buildDefaultCartItemInfo();
-		given(this.cartItemRepository.findCartItemInfoByUserId(any()))
+		given(this.cartItemRepository.findCartItemResponseByMemberId(any()))
 				.willReturn(List.of(cartItemInfo));
 
 		// when
@@ -133,7 +133,7 @@ class CartServiceTests {
 	void deleteCartItems() {
 		// given
 		var cartItemInfo = TestUtils.buildDefaultCartItemInfo();
-		given(this.cartItemRepository.findCartItemInfoByUserId(any()))
+		given(this.cartItemRepository.findCartItemResponseByMemberId(any()))
 				.willReturn(List.of(cartItemInfo));
 
 		// when

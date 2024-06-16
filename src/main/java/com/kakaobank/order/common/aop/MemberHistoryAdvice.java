@@ -5,8 +5,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kakaobank.order.common.entity.ActionType;
 import com.kakaobank.order.member.repository.MemberHistoryRepository;
+import com.kakaobank.order.common.entity.MemberHistory;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -39,10 +42,9 @@ public class MemberHistoryAdvice {
 		var method = signature.getMethod();
 
 		// build UserHistory
-		var actionType = method.getAnnotation(MemberHistory.class).actionType();
+		var actionType = method.getAnnotation(com.kakaobank.order.common.aop.MemberHistory.class).actionType();
 		var parameters = method.getParameters();
 		var args = joinPoint.getArgs();
-		var memberHistoryBuilder = com.kakaobank.order.common.entity.MemberHistory.builder().actionType(actionType);
 
 		Map<String, Object> requestParam = new HashMap<>();
 
@@ -58,15 +60,19 @@ public class MemberHistoryAdvice {
 
 		final Object result = joinPoint.proceed();
 		if (result != null) {
-			memberHistoryBuilder.request(this.objectMapper.writeValueAsString(requestParam))
-				.result(this.objectMapper.writeValueAsString(result))
-				.actionDateTime(ZonedDateTime.now());
+			var memberHistory = buildMemberHistory(requestParam, actionType, result);
+			this.memberHistoryRepository.save(memberHistory);
 		}
-
-		var memberHistory = memberHistoryBuilder.build();
-		this.memberHistoryRepository.save(memberHistory);
 
 		return result;
 	}
 
+	private MemberHistory buildMemberHistory (Map<String, Object> requestParam, ActionType actionType, Object result) throws JsonProcessingException {
+		var memberHistoryBuilder = MemberHistory.builder().actionType(actionType);
+		memberHistoryBuilder.request(this.objectMapper.writeValueAsString(requestParam))
+				.result(this.objectMapper.writeValueAsString(result))
+				.actionDateTime(ZonedDateTime.now());
+
+		return memberHistoryBuilder.build();
+	}
 }

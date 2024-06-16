@@ -50,7 +50,7 @@ public class UserActionAdvice {
 					var name = parameter.getName();
 					if (name.equals("context")) {
 						var context = (UserContext) args[i];
-						userActionBuilder.userId(context.getUuid()).apiPath(context.getReqPath());
+						userActionBuilder.memberId(context.getUuid()).apiPath(context.getReqPath());
 					}
 					else {
 						requestParam.put(name, args[i]);
