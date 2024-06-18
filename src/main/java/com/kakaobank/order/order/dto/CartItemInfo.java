@@ -1,5 +1,7 @@
 package com.kakaobank.order.order.dto;
 
+import java.math.BigDecimal;
+
 public class CartItemInfo {
 	private long id;
 
@@ -7,13 +9,13 @@ public class CartItemInfo {
 
 	private String productName;
 
-	private int price;
+	private BigDecimal price;
 
 	private int quantity;
 
 	private int stock;
 
-	public CartItemInfo(long id, long productId, String productName, int price, int quantity, int stock) {
+	public CartItemInfo(long id, long productId, String productName, BigDecimal price, int quantity, int stock) {
 		this.id = id;
 		this.productId = productId;
 		this.productName = productName;
@@ -46,11 +48,11 @@ public class CartItemInfo {
 		this.productName = productName;
 	}
 
-	public int getPrice() {
+	public BigDecimal getPrice() {
 		return price;
 	}
 
-	public void setPrice(int price) {
+	public void setPrice(BigDecimal price) {
 		this.price = price;
 	}
 

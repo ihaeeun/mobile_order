@@ -1,5 +1,6 @@
 package com.kakaobank.order;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.UUID;
@@ -38,7 +39,7 @@ public final class TestUtils {
 		orderItem.setId(1);
 		orderItem.setOrderId(orderId);
 		orderItem.setQuantity(QUANTITY);
-		orderItem.setPrice(2000);
+		orderItem.setPrice(BigDecimal.valueOf(2000));
 		orderItem.setProductId(1);
 		return orderItem;
 	}
@@ -55,7 +56,7 @@ public final class TestUtils {
 	public static Product buildProduct() {
 		var product = new Product();
 		product.setId(1);
-		product.setPrice(2000);
+		product.setPrice(BigDecimal.valueOf(2000));
 		product.setStock(20);
 		product.setName("product1");
 		return product;
@@ -82,11 +83,11 @@ public final class TestUtils {
 	}
 
 	public static CartItemInfo buildDefaultCartItemInfo() {
-		return new CartItemInfo(1, 1, "product1", 2000, QUANTITY, 20);
+		return new CartItemInfo(1, 1, "product1", BigDecimal.valueOf(2000), QUANTITY, 20);
 	}
 
 	public static CartItemInfo buildCustomCartItemInfo(int quantity) {
-		return new CartItemInfo(1, 1, "product1", 2000, quantity, 20);
+		return new CartItemInfo(1, 1, "product1", BigDecimal.valueOf(2000), quantity, 20);
 	}
 
 	public static UserContext getTestContext() {

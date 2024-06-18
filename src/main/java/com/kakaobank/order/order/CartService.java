@@ -47,7 +47,7 @@ public class CartService {
 	@Transactional(isolation = Isolation.READ_COMMITTED)
 	@UserAction(actionType = ActionType.ADD_CART)
 	public CartEntries addCart(UserContext context, AddCartRequest request) {
-		var product = this.productService.getProductDetail(request.productId());
+		var product = this.productService.getProduct(request.productId());
 
 		if (product.isAvailable(request.quantity())) {
 			var cartItem = this.cartItemRepository.findByMemberIdAndProductId(context.getUuid(), request.productId());

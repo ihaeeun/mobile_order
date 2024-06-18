@@ -48,7 +48,7 @@ class ProductServiceTests {
 		given(this.productRepository.findById(any())).willReturn(Optional.of(product));
 
 		// when
-		var result = this.productService.getProductDetail(1);
+		var result = this.productService.getProduct(1);
 
 		// then
 		assertThat(result).isNotNull();

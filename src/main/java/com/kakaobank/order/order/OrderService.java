@@ -44,7 +44,7 @@ public class OrderService {
 	private final OrderItemRepository orderItemRepository;
 
 	OrderService(CartService cartService, OrderRepository orderRepository, OrderItemRepository orderItemRepository,
-			PaymentService paymentService, ProductService productService) {
+	             PaymentService paymentService, ProductService productService) {
 		this.cartService = cartService;
 		this.orderRepository = orderRepository;
 		this.orderItemRepository = orderItemRepository;
@@ -74,22 +74,20 @@ public class OrderService {
 				var orderItem = OrderItem.of(orderId, itemInfo);
 				orderItems.add(orderItem);
 				this.productService.updateStock(itemInfo.getProductId(), itemInfo.getQuantity());
-			}
-			else {
+			} else {
 				var message = MessageBuilder.buildOutOfStockMessage(itemInfo.getProductName(), itemInfo.getStock());
 				throw new OrderServiceException(HttpStatus.INTERNAL_SERVER_ERROR, message);
 			}
 		}
 
-		var totalAmount = orderItems.stream().mapToInt((item) -> item.getPrice() * item.getQuantity()).sum();
+		var totalAmount = orderItems.stream().mapToInt((item) -> item.getPrice().intValueExact() * item.getQuantity()).sum();
 		var order = new Order(orderId, context.getUuid(), totalAmount);
 
 		try {
 			// payment 호출
 			var paymentResponse = this.paymentService.makePayment(order);
 			return processAfterPayment(context, paymentResponse, order, orderItems, requests.cartItemIds());
-		}
-		catch (HttpStatusCodeException | InterruptedException ex) {
+		} catch (HttpStatusCodeException | InterruptedException ex) {
 			throw new OrderServiceException(HttpStatus.INTERNAL_SERVER_ERROR, "Fail payment.");
 		}
 	}
@@ -131,8 +129,7 @@ public class OrderService {
 				return this.orderRepository.save(order);
 			}
 			throw new OrderServiceException(HttpStatus.INTERNAL_SERVER_ERROR, "Fail cancel payment.");
-		}
-		catch (HttpStatusCodeException | InterruptedException ex) {
+		} catch (HttpStatusCodeException | InterruptedException ex) {
 			throw new OrderServiceException(HttpStatus.INTERNAL_SERVER_ERROR, "Fail cancel payment.");
 		}
 	}

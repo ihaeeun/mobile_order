@@ -37,7 +37,7 @@ class CartServiceTests {
 	void addCart_emptyCart() {
 		// given
 		var product = TestUtils.buildProduct();
-		given(this.productService.getProductDetail(product.getId())).willReturn(product);
+		given(this.productService.getProduct(product.getId())).willReturn(product);
 
 		var context = TestUtils.getTestContext();
 		given(this.cartItemRepository.findByMemberIdAndProductId(context.getUuid(), product.getId())).willReturn(null);
@@ -66,7 +66,7 @@ class CartServiceTests {
 	void addCart_notEmptyCart() {
 		// given
 		var product = TestUtils.buildProduct();
-		given(this.productService.getProductDetail(product.getId())).willReturn(product);
+		given(this.productService.getProduct(product.getId())).willReturn(product);
 
 		var context = TestUtils.getTestContext();
 		var cartItem = TestUtils.buildCartItem();
@@ -97,7 +97,7 @@ class CartServiceTests {
 		// given
 		var product = TestUtils.buildProduct();
 		product.setStock(0);
-		given(this.productService.getProductDetail(product.getId())).willReturn(product);
+		given(this.productService.getProduct(product.getId())).willReturn(product);
 
 		var cartItem = TestUtils.buildCartItem();
 		var request = new AddCartRequest(cartItem.getProductId(), cartItem.getQuantity());

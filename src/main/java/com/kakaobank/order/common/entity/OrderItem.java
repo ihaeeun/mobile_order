@@ -1,5 +1,7 @@
 package com.kakaobank.order.common.entity;
 
+import java.math.BigDecimal;
+
 import com.kakaobank.order.order.dto.CartItemInfo;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,12 +24,12 @@ public class OrderItem {
 
 	private int quantity;
 
-	private int price;
+	private BigDecimal price;
 
 	public OrderItem() {
 	}
 
-	private OrderItem(String orderId, long productId, int quantity, int price) {
+	private OrderItem(String orderId, long productId, int quantity, BigDecimal price) {
 		this.orderId = orderId;
 		this.productId = productId;
 		this.quantity = quantity;
@@ -66,11 +68,11 @@ public class OrderItem {
 		this.quantity = quantity;
 	}
 
-	public int getPrice() {
+	public BigDecimal getPrice() {
 		return this.price;
 	}
 
-	public void setPrice(int price) {
+	public void setPrice(BigDecimal price) {
 		this.price = price;
 	}
 

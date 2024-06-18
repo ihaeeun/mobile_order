@@ -3,13 +3,13 @@ create table cart_item
     id         bigint  not null auto_increment,
     quantity   integer not null,
     product_id bigint unique,
-    user_id    varchar(255),
+    member_id  varchar(255),
     primary key (id)
 );
-create index ix_userId
-    on cart_item (user_id);
-create index ix_userId_productId
-    on cart_item (user_id, product_id);
+create index idx_memberId
+    on cart_item (member_id);
+create index ix_memberId_productId
+    on cart_item (member_id, product_id);
 
 create table member
 (
@@ -42,14 +42,14 @@ create table member_history
 create table order_form
 (
     id              varchar(255) not null,
-    user_id         varchar(255),
+    member_id       varchar(255),
     total_amount    bigint       not null,
     order_status    tinyint check (order_status between 0 and 2),
     order_date_time timestamp(6) with time zone,
     primary key (id)
 );
-create index idx_userId
-    on order_form (user_id);
+create index ix_memberId
+    on order_form (member_id);
 create index ix_id_orderStatus
     on order_form (id, order_status);
 

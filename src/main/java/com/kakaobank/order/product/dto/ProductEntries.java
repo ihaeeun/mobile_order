@@ -4,5 +4,5 @@ import java.util.List;
 
 import com.kakaobank.order.common.entity.Product;
 
-public record ProductEntries(List<Product> products) {
+public record ProductEntries(List<ProductResponse> products) {
 }

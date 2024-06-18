@@ -1,7 +1,7 @@
 package com.kakaobank.order.product;
 
-import com.kakaobank.order.common.entity.Product;
 import com.kakaobank.order.product.dto.ProductEntries;
+import com.kakaobank.order.product.dto.ProductResponse;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,7 +24,7 @@ public class ProductController {
 	}
 
 	@GetMapping("/{id}")
-	public Product getProductDetail(@PathVariable long id) {
+	public ProductResponse getProductDetail(@PathVariable long id) {
 		return this.productService.getProductDetail(id);
 	}
 

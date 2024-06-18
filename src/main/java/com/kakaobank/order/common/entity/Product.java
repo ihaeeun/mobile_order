@@ -1,5 +1,7 @@
 package com.kakaobank.order.common.entity;
 
+import java.math.BigDecimal;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,7 +16,7 @@ public class Product {
 
 	private String name;
 
-	private int price;
+	private BigDecimal price;
 
 	private int stock = 0;
 
@@ -37,11 +39,11 @@ public class Product {
 		this.name = name;
 	}
 
-	public int getPrice() {
+	public BigDecimal getPrice() {
 		return this.price;
 	}
 
-	public void setPrice(int price) {
+	public void setPrice(BigDecimal price) {
 		this.price = price;
 	}
 

@@ -9,7 +9,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(indexes = {
-		@Index(name = "ix_memberId", columnList = "member_id"),
+		@Index(name = "idx_memberId", columnList = "member_id"),
 		@Index(name = "ix_memberId_productId", columnList = "member_id, product_id")
 })
 public class CartItem {
